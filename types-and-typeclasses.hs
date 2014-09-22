@@ -33,4 +33,6 @@ showThing thing = show thing
 -- use :: [type] to denote the type of the output. So like :: Int or :: Char or even :: [Int] or :: (Int, Char)
 readInt thing = read thing :: Int
 
--- Integral = 
+-- Integral = typeclass that contains Integer and Int
+integralExample :: (Show a, Integral a) => a -> String
+integralExample var = show var
