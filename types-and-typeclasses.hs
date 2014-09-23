@@ -36,3 +36,7 @@ readInt thing = read thing :: Int
 -- Integral = typeclass that contains Integer and Int
 integralExample :: (Show a, Integral a) => a -> String
 integralExample var = show var
+
+factorial :: (Integral a) => a -> a
+factorial 0 = 1
+factorial n = n * factorial (n - 1)
