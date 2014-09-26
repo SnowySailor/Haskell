@@ -7,6 +7,7 @@ lucky x = "Sorry, you're out of luck, pal!"
 
 
 -- PATTERN MATCHING --
+
 -- When you call sayMe, it goes down the list of functions and specific arguments. You need to be careful 
 -- in that you make sure that you have a catch for every input that's possible so that something does get returned.
 -- The last function declaration should catch anything and everything. 
@@ -84,6 +85,7 @@ sum' (x:xs) = x + sum' xs
 
 
 -- GUARDS --
+
 -- Guards are a way of testing if something is true or false based on a condition. If one guard condition fails, then it falls through to the next one. "otherwise" is 
 -- defined as True always. 
 bmiTell :: (RealFloat a) => a -> a -> String
@@ -111,7 +113,8 @@ a `myCompare` b -- We can also define functions using backticks. It is sometimes
 
 
 -- WHERE --
--- You can use "where" to do a calculation or evaluation once. More efficient than using a calculation every time.
+
+-- You can use "where" to do a calculation or evaluation once. More efficient than using a calculation every time. Then whole function can see them.
 bmiTell' :: (RealFloat a, Show a) => a -> a -> String
 bmiTell' weight height
 	| bmi <= skinny = "You're underweight you emo you. Your BMI is " ++ show bmi
@@ -134,3 +137,20 @@ calcBmi :: (RealFloat a) => [(a, a)] -> [a]
 calcBmi xs = [bmi w h | (w, h) <- xs]
 	where 
 		bmi weight height = weight / height ^ 2
+
+
+-- LET --
+
+-- When using let bindings, only the specific portion of the function that you put it in can see it. Since they are expressions, you can put them anywhere you want
+-- and not just at the end. The format is "let <binding> in <expression>". Only the <expression> and see what you defined in <binding>
+-- Function to find the area of a cylinder
+cylinder :: (RealFloat a, Show a) => a -> a -> String
+cylinder r h = 
+	let 
+		sideArea = 2 * pi * r * h
+		topArea = pi * r ^ 2
+	in
+		"The area of a cylinder with a radius of " ++ show r ++ " and a height of " ++ show h ++ " is " ++ show (sideArea + 2 * topArea)
+
+-- We can use let bindings to make functions as well in a local scope. 
+-- [let square x = x * x in (square 5, square 3, square 2)]
