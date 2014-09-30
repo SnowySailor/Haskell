@@ -171,3 +171,23 @@ calcBmis xs = ["Your BMI is " ++ show bmi | (w,h) <- xs, let bmi = w / h ^ 2]
 -- We can make it only calculate teh BMI's for fat people.
 calcBmis' :: (RealFloat a, Show a) => [(a,a)] -> [String]
 calcBmis' xs = ["Your BMI is " ++ show bmi | (w,h) <- xs, let bmi = w/h^2, bmi >= 25.0]
+
+
+-- CASE --
+
+-- You can use case expressions in place of pattern matching.
+head'' :: [a] -> a
+head'' xs = case xs of [] -> error "No head on empty lists."
+                       (x:_) -> x
+
+-- The pattern for these is pretty simple. 
+-- case [expression] of [pattern] -> [result]
+--                      [pattern] -> [result]
+--                      [pattern] -> [result]
+--                      ....
+-- Where [expression] is matched against the [patterns].
+
+describeList :: [a] -> String
+describeList x = "This is a" ++ case x of [] -> "n empty list."
+                                          (x:[]) -> " singleton list."
+                                          (x:_) -> " longer list."
