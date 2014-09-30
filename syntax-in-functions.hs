@@ -153,4 +153,21 @@ cylinder r h =
 		"The area of a cylinder with a radius of " ++ show r ++ " and a height of " ++ show h ++ " is " ++ show (sideArea + 2 * topArea)
 
 -- We can use let bindings to make functions as well in a local scope. 
--- [let square x = x * x in (square 5, square 3, square 2)]
+square' :: Int -> Int -> Int -> (Int, Int, Int)
+square' a b c = let square x = x * x in (square a, square b, square c)
+
+-- If we don't want to bind variables in columns, we can do it in a single line but with semicolons. 
+noColumns :: (Int, String)
+noColumns = (let a = 100; b = 200; c = 300 in a*b*c, let foo="Hey "; bar="there!" in foo++bar)
+
+-- You can also pattern match with let bindings if you don't want to use semicolons.
+noColumns' :: Int
+noColumns' = (let (a,b,c) = (1,2,3) in a*b*c) * 100
+
+-- It's also possible to use let bindings inside of list comprehensions. 
+calcBmis :: (RealFloat a, Show a) => [(a, a)] -> [String]
+calcBmis xs = ["Your BMI is " ++ show bmi | (w,h) <- xs, let bmi = w / h ^ 2]
+
+-- We can make it only calculate teh BMI's for fat people.
+calcBmis' :: (RealFloat a, Show a) => [(a,a)] -> [String]
+calcBmis' xs = ["Your BMI is " ++ show bmi | (w,h) <- xs, let bmi = w/h^2, bmi >= 25.0]
