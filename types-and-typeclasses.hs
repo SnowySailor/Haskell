@@ -1,4 +1,4 @@
-	--TYPES
+--TYPES AND TYPECLASSES--
 
 -- Int = number from -2147483647 to 2147483647
 addThree :: Int -> Int -> Int -> Int
