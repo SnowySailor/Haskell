@@ -32,6 +32,19 @@ isUpperAlphanum = (`elem` ['A'..'Z'])
 subtractFour :: (Num a) => a -> a
 subtractFour = (subtract 4)
 
--- Functions that take functions as parameters!
+-- Functions that take functions as parameters! It then applies the function to the result of the function.
+-- So if you type applyTwice (3*) 10, it does 3*(3*10) => 90
 applyTwice :: (a -> a) -> a -> a
 applyTwice f x = f (f x)
+-- You can also say 'let functionName = applyTwice (3*)' so that you can type functionName 5 and get teh number 45.
+
+--zipWith function. Takes function as parameter, then returns a zipped list.
+-- So calling "zipWith' (*) [1,2,3] [1,2,3]" returns [1,4,9]
+zipWith' :: (a -> b -> c) -> [a] -> [b] -> [c]
+zipWith' _ [] _ = []
+zipWith' _ _ [] = []
+zipWith' f (x:xs) (y:xy) = f x y : zipWith' f xs xy
+
+-- Simple function to flip the order of the parameters. 
+flip' :: (a -> b -> c) -> (b -> a -> c)
+flip' f x y = f y x
