@@ -45,6 +45,30 @@ zipWith' _ [] _ = []
 zipWith' _ _ [] = []
 zipWith' f (x:xs) (y:xy) = f x y : zipWith' f xs xy
 
--- Simple function to flip the order of the parameters. 
+-- Simple function to flip the order of the parameters of a function.
 flip' :: (a -> b -> c) -> (b -> a -> c)
 flip' f x y = f y x
+
+
+-- MAP AND FILTER --
+-- These can both be done with list comprehensions, but doing them this way is easier to understand. 
+-- Map function takes a function and a list and then applies that function to every element in the list.
+map' :: (a -> b) -> [a] -> [b]
+map' _ [] = []
+map' f (x:xs) = f x : map' f xs
+
+-- Function to filter out unwanted values from a list.
+filter' :: (a -> Bool) -> [a] -> [a]
+filter' _ [] = []
+filter' f (x:xs)
+	| f x = x : filter' f xs
+	| otherwise = filter' f xs
+
+-- Quicksort function redefined using the filter function.
+quicksort' :: (Ord a) => [a] -> [a]
+quicksort' [] = []
+quicksort' (x:xs) = 
+	let 
+		smallerSorted = quicksort' (filter' (<=x) xs)
+		largerSorted = quicksort' (filter' (x<) xs)
+	in smallerSorted ++ [x] ++ largerSorted
