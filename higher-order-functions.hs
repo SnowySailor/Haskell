@@ -72,3 +72,12 @@ quicksort' (x:xs) =
 		smallerSorted = quicksort' (filter' (<=x) xs)
 		largerSorted = quicksort' (filter' (x<) xs)
 	in smallerSorted ++ [x] ++ largerSorted
+
+-- Finds the largest number that is divisible by 3829.
+largestDivisible :: (Integral a) => a
+largestDivisible = head (filter p [100000,99999..])
+	where p x = x `mod` 3829 == 0
+
+-- takeWhile takes a predicate and a list. It looks over the list and stops taking once it finds a place in the list where the predicate fails.
+-- sum (takeWhile (<10000) (filter odd (map (^2) [1..]))) will give us the sum of all odd squares that are less than 10,000. 
+-- takeWhile (/=' ') "some string goes here" will give us the first word in a string. 

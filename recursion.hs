@@ -60,3 +60,14 @@ quicksort (x:xs) =
 		largeSort = quicksort [a | a <- xs, a > x]
 	in
 		smallSort ++ [x] ++ largeSort
+
+
+pigLatin :: String -> String
+pigLatin [] = ""
+pigLatin (x:xs) = reverse (tail (reverse (string ++ [x] ++ "ay " ++ pigLatin (takeFrom ((length string)+1) xs))))
+	where string = (takeWhile (/=' ') xs)
+
+takeFrom :: Int -> String -> String
+takeFrom _ "" = ""
+takeFrom 0 string = string
+takeFrom n (x:string) = takeFrom (n-1) string
