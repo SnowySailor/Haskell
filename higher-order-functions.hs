@@ -81,3 +81,25 @@ largestDivisible = head (filter p [100000,99999..])
 -- takeWhile takes a predicate and a list. It looks over the list and stops taking once it finds a place in the list where the predicate fails.
 -- sum (takeWhile (<10000) (filter odd (map (^2) [1..]))) will give us the sum of all odd squares that are less than 10,000. 
 -- takeWhile (/=' ') "some string goes here" will give us the first word in a string. 
+
+-- Collatz sequences
+chain :: (Integral a) => a -> [a]
+chain 1 = [1]
+chain n 
+	| even n = n:chain (n `div` 2)
+	| odd n = n:chain (n*3 + 1)
+
+-- This gets the number of "long chains." AKA the number of chains that are longer than length 15.
+numLongChains :: Int
+numLongChains = length (filter isLong (map chain [1..100]))
+	where isLong xs = length xs > 15
+
+-- LAMBDAS --
+-- These are used basically make anonymous functions. They don't need a name and they are applied with \, which kind of looks like a lambda :P
+-- We can re-write the numLongChains function using lambdas instead of the where binding. 
+numLongChains' :: Int
+numLongChains' = length (filter (\xs -> length xs > 15) (map chain [1..100]))
+-- Lambdas are just expressions, so we can pass them wherever an expression can be passed. 
+-- Lambdas can take any number of parameters. They are written in the form of (\PARAM PARAM PARAM -> FUNCTION)
+-- You can also pattern match with lambdas, but you need to be careful because if there is an error, it doesn't fall through. 
+lambdas = map (\(a,b) -> a+b) [(1,2),(3,5),(6,3),(2,6),(2,5)]

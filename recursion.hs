@@ -71,3 +71,8 @@ takeFrom :: Int -> String -> String
 takeFrom _ "" = ""
 takeFrom 0 string = string
 takeFrom n (x:string) = takeFrom (n-1) string
+
+pal :: String -> String
+pal [] = ""
+pal string = reverse single ++ " " ++ pal (takeFrom ((length single)+1) string)
+	where single = takeWhile (/=' ') string
