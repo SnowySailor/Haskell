@@ -103,3 +103,76 @@ numLongChains' = length (filter (\xs -> length xs > 15) (map chain [1..100]))
 -- Lambdas can take any number of parameters. They are written in the form of (\PARAM PARAM PARAM -> FUNCTION)
 -- You can also pattern match with lambdas, but you need to be careful because if there is an error, it doesn't fall through. 
 lambdas = map (\(a,b) -> a+b) [(1,2),(3,5),(6,3),(2,6),(2,5)]
+-- While pattern matching, you can only have one pattern you're looking for. 
+
+addThree :: (Num a) => a -> a -> a -> a
+addThree a b c = a + b + c
+-- is the same as
+addThree' :: (Num a) => a -> a -> a -> a
+addThree' = (\a -> (\b -> (\c -> a+b+c)))
+
+-- FOLDL --
+-- foldl takes a binary function, a starting position, and a list. It then applies that function to the elements in the list.
+-- We can rewrite the sum function like this with foldl:
+sum' :: (Num a) => [a] -> a
+sum' xs = foldl (\strt x -> strt + x) 0 xs
+-- It basically says strt = 0, xs = [1,2,3,4]. It'll preform the anonymous function on the two parameters and then reset the strt value to the value of strt + x
+-- where x is just one of the elements in the list that is provided. 
+
+-- We can also rewrite the sum function a lot easier. 
+sum'' :: (Num a) => [a] -> a
+sum'' = foldl (+) 0
+-- We can replace the lambda (\strt x -> strt + x) because that's the same as (+). We can omit the xs because calling foldl (+) 0 will return a function that takes a list
+-- because of currying. So if you have a function foo a = foo b a, you can rewrite that as foo = bar b
+five :: (Num a, Eq a) => [a] -> Bool
+five = elem 1
+
+-- elem function written with left folds.
+elem' :: (Eq a) => a -> [a] -> Bool
+elem' a = foldl (\acc x -> if x == a then True else acc) False
+
+-- FOLDR --
+-- foldr works exactly the same as foldl but it starts from the right side of the list instead of the left side.
+-- map function with foldr
+map'' :: (a -> b) -> [a] -> [b]
+map'' f a = foldr (\x acc -> f x : acc) [] a
+
+-- Folds can be used to implement any function where you traverse a list once, element by element, and then return something based on that. 
+-- Whenever you want to traverse a list to return something, chances are you want a fold. 
+-- WHEN BUILDING A NEW LIST FROM A LIST, USE RIGHT FOLD BECAUSE USING : IS LESS RESOURCE-EXPENSIVE THAN ++.
+-- Right folds work on infinite lists if you have a starting point. Cause it can start from a point and get to the beginning. But this can't 
+-- work with left folds because you can't go to infinity without an unending loop.
+
+-- FOLDL1 --
+-- foldl1 works just like foldl except it assumes that the starting value is the first elemen of the list that is provided.
+-- So much currying.
+sum''' :: (Num a) => [a] -> a
+sum''' = foldl1 ( + )
+
+-- FOLDR1 --
+-- foldr1 works just like foldr but it uses the last element of the list provided as the starting value
+
+-- COMMMON FUNCTIONS WRITTEN WITH FOLDS --
+-- maximum function written with folds.
+maximum' :: (Ord a) => [a] -> a
+maximum' = foldl1 (\acc x -> if x > acc then x else acc)
+
+-- reverse function written with folds
+reverse' :: [a] -> [a]
+reverse' = foldl (\acc x -> x : acc) []
+
+-- product function with folds
+product' :: (Num a) => [a] -> a
+product' = foldl1 ( * )
+
+-- filter function with folds
+filter'' :: (a -> Bool) -> [a] -> [a]
+filter'' f = foldr (\x acc -> if f x then x : acc else acc) []
+
+-- head function with folds
+head' :: [a] -> a
+head' = foldr1 (\x _ -> x)
+
+-- last function with folds
+last' :: [a] -> a
+last' = foldl1 (\_ x -> x)
