@@ -2,7 +2,7 @@
 
 -- CURRIED FUNCTIONS --
 
--- Haskell functions only take one parameter. It sounds a little weird, but it kind of makes sense. 
+-- ALL Haskell functions only take one parameter. It sounds a little weird, but it kind of makes sense. 
 -- If you call "max 4 5", it's the same as "(max 4) 5". Doing max 4 5 creates a function that takes a parameter and returns either 4 or that
 -- parameter, depending on which is bigger. Then, 5 is applied to that function and it gives us our result. 
 foo :: (Num a) => a -> a -> a
@@ -176,3 +176,28 @@ head' = foldr1 (\x _ -> x)
 -- last function with folds
 last' :: [a] -> a
 last' = foldl1 (\_ x -> x)
+
+-- SCANR --
+-- scanr works like foldr, only it just reports the accumulator value each time it goes over a new element of the list.
+sumAcc :: (Num a) => [a] -> [a]
+sumAcc = scanr ( + ) 0
+
+-- SCANL --
+-- scanl works like scanr, but it starts from the left.
+sumAcc' :: (Num a) => [a] -> [a]
+sumAcc' = scanr ( + ) 0
+
+-- How many numbers does it take for the sum of the squares of those numbers to exceed 1000?
+sqrtSums :: Int
+sqrtSums = length (takeWhile (< 1000) (scanl ( + ) 1 (map sqrt [1..])))
+
+-- FUNCTION APPLICATION --
+-- Using $ has the lowest precedence. It just helps us so that we don't have to write as many parenthesis. 
+-- So if you wanted to take the squares root of three and add it to 4 and 9, you'd do sqrt 3 + 4 + 9, but if you wanted to 
+-- add the squares roots of all those numbers you could write sqrt $ 3 + 4 + 9 instead of sqrt (3 + 4 + 9)
+-- Example
+randomness :: Int
+randomness = sum (filter (> 10) (map (*2) [2..10]))
+-- This function can berewritten with function application like this:
+randomness' :: Int
+randomness' = sum $ filter (>10) $ map (*2) [2..10]
