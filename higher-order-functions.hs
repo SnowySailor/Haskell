@@ -198,6 +198,25 @@ sqrtSums = length (takeWhile (< 1000) (scanl ( + ) 1 (map sqrt [1..])))
 -- Example
 randomness :: Int
 randomness = sum (filter (> 10) (map (*2) [2..10]))
--- This function can berewritten with function application like this:
+-- This function can be rewritten with function application like this:
 randomness' :: Int
 randomness' = sum $ filter (>10) $ map (*2) [2..10]
+
+-- FUNCTION COMPOSITION --
+-- Using the '.' character, we can do function composition like we can with math. 
+-- So f(g(x)) = (f . g) x
+-- IMPORTANT: f must take a value that is the same type as g's return value. 
+
+-- Function that turns all numbers negative.
+negate' :: (Num a) => [a] -> [a]
+negate' = map (\x -> negate (abs x))
+-- This is rather annoying to do and can be a little confusing. We can do the same with function composition much easier. 
+negate'' :: (Num a) => [a] -> [a]
+negate'' = map $ negate . abs
+
+-- More examples of how function composition can be useful. 
+mathIsFun :: (Num a) => [[a]] -> [a]
+mathIsFun = map (\xs -> negate (sum (tail xs)))
+-- can be turned into this:
+mathIsFun' :: (Num a) => [[a]] -> [a]
+mathIsFun' = map $ negate . sum . tail
