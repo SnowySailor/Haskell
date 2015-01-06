@@ -226,4 +226,4 @@ sumOddSquares :: Integer
 sumOddSquares = sum (takeWhile (<10000) (filter odd (map (^2) [1..])))
 -- can be turned into this
 sumOddSquares' :: Integer
-sumOddSquares' = sum . takeWhile (<10000) . filter odd . map (^2) $ [1..] 
+sumOddSquares' = sum . takeWhile (<10000) . filter odd . map (^2) $ [1..]
