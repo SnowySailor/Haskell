@@ -220,3 +220,10 @@ mathIsFun = map (\xs -> negate (sum (tail xs)))
 -- can be turned into this:
 mathIsFun' :: (Num a) => [[a]] -> [a]
 mathIsFun' = map $ negate . sum . tail
+
+-- Sum of all odd squares that are less than 10000
+sumOddSquares :: Integer
+sumOddSquares = sum (takeWhile (<10000) (filter odd (map (^2) [1..])))
+-- can be turned into this
+sumOddSquares' :: Integer
+sumOddSquares' = sum . takeWhile (<10000) . filter odd . map (^2) $ [1..]
