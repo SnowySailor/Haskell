@@ -227,3 +227,10 @@ sumOddSquares = sum (takeWhile (<10000) (filter odd (map (^2) [1..])))
 -- can be turned into this
 sumOddSquares' :: Integer
 sumOddSquares' = sum . takeWhile (<10000) . filter odd . map (^2) $ [1..]
+-- which can be written more easily like this
+sumOddSquares'' :: Integer
+sumOddSquares'' = 
+	let 
+		oddSquares = filter odd . map (^2) $ [1..]
+		belowLimit = takeWhile (<10000) oddSquares
+	in sum belowLimit
