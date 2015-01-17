@@ -111,3 +111,46 @@ breakOn = break (==4) [1..10]
 -- sort just sorts a list. The elements of the list must e of the Ord typeclass because they need to be able to be ordered.
 sort' :: [Int]
 sort' = sort [1,5,1,3,6,1,88,2,6,4,23]
+
+-- group takes a list and returns a list of lists. Each of the sublists contains the same value. So [1,1,2,3,3,3] -> [[1,1],[2],[3,3,3]]
+-- however, the elements must be adjecent to each other. 
+group' :: [[Char]]
+group' = group "Hello there. I am a list."
+-- if we sort a list before we group it, we can see how many of each element are in a list
+howMany :: [(Int, Int)]
+howMany = map (\l@(x:xs) -> (x,length l)) . group . sort $ [1,1,1,1,2,2,2,2,3,3,2,2,2,5,6,7]
+
+-- inits is like init, but it applies recursively to the list that it's given. Returns a list of lists. 
+initsTest :: [[Char]]
+initsTest = inits "this is a list"
+
+-- tails is just like inits, but it works backwards. Starts with the whole list and then gradually reduces the length.
+tailsTest :: [[Char]]
+tailsTest = tails "this is a list"
+
+-- function to search a list for a sublist
+listSearch :: (Eq a) => [a] -> [a] -> Bool
+listSearch needle haystack = 
+	let nlength = length needle
+	in foldl (\acc x -> if take nlength x == needle then True else acc) False $ tails haystack
+
+-- isInfixOf does the exact same thing as listSearch.
+isInfixOfTest :: Bool
+isInfixOfTest = isInfixOf "cat" "there's a cat in here"
+
+-- isPrefixOf checks to see if your provided list is at the beginning of the list you're searching through
+isPrefixOfTest :: Bool
+isPrefixOfTest = isPrefixOf "hey" "oh hey there!"
+
+-- isSuffixOf does the same thing as isPrefixOf, but it checks to see if the list you're searching through ENDS with your value
+isSuffixOfTest :: Bool
+isSuffixOfTest = isSuffixOf "there!" "oh hey there!"
+
+-- find takes a predicate and a list and returns a Maybe value. That is, either Nothing or Just _, where _ is the element you searched for.
+findTest :: Maybe Char
+findTest = find (=='a') "this is a cat"
+
+-- Rework the stocks function from earlier so that in case the stocks never go over 1,000, we don't get an arror for calling head on
+-- an empty list. 
+stocks' :: Maybe (Double, Int, Int, Int)
+stocks' = find (\(val, y, m, d) -> val > 1000) $ [(994.4,2008,9,1),(995.2,2008,9,2),(999.2,2008,9,3),(1001.4,2008,9,4),(998.3,2008,9,5)]
