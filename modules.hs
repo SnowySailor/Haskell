@@ -70,3 +70,44 @@ anyTest = any (`elem` ['A'..'Z']) "HEYGUYSwhatsup"
 -- 'all' takes a predicate and a list and returns True only if ALL of the values in the list satisfy the predicate
 allTest :: Bool
 allTest = all (`elem` ['A'..'Z']) "HEYGUYSwhatsup"
+
+-- iterate takes a function and a starting value and iterates that function over the starting values. Returns an infinite list.
+iterateTest :: [Int]
+iterateTest = take 10 $ iterate (*2) 1
+
+-- splitAt takes a number and a list and it splits the list at the position that the number represents
+splitAtTest :: ([Char], [Char])
+splitAtTest = splitAt 5 "hellothere"
+
+-- takeWhile takes a predicate and a list and takes values from the list while the predicate is true. When it's no longer true, the function stops
+takeWhile' :: [Int]
+takeWhile' = takeWhile (>3) [6,5,4,3,2,1,3,2,5,7,8,2,6,4]
+-- Function to determine the sum of all cubes that are less than 10,000.
+sumCubes :: Int
+sumCubes = sum $ takeWhile (<10000) $ map (^3) [1..]
+
+-- dropWhile is like takeWhile, but it drops the elements from a list while the predicate is true.
+dropWhile' :: [Int]
+dropWhile' = dropWhile (<3) [1..10]
+dropWhile'' :: [Char]
+dropWhile'' = dropWhile (/=' ') "Hello there."
+
+-- Example that shows how we can use dropWhile in order to determine when an event occours given a few data points.
+stocks :: (Double, Int, Int, Int) 
+stocks = head (dropWhile (\(val,y,m,d) -> val < 1000) [(994.4,2008,9,1),(995.2,2008,9,2),(999.2,2008,9,3),(1001.4,2008,9,4),(998.3,2008,9,5)])
+
+-- span is like takeWhile, but it returns a double of lists. One is what takeWhile would return, and the other is what it would leave behind.
+spanExample :: [Char]
+spanExample = 
+	let 
+		(fw, rest) = span (/=' ') "This is a sentence."
+	in
+		"First word: " ++ fw ++ ". Rest: " ++ rest
+
+-- break will break a list in two and return a double is lists when the predicate is first met somewhat like span.
+breakOn :: ([Int], [Int])
+breakOn = break (==4) [1..10]
+
+-- sort just sorts a list. The elements of the list must e of the Ord typeclass because they need to be able to be ordered.
+sort' :: [Int]
+sort' = sort [1,5,1,3,6,1,88,2,6,4,23]
