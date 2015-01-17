@@ -146,6 +146,11 @@ isPrefixOfTest = isPrefixOf "hey" "oh hey there!"
 isSuffixOfTest :: Bool
 isSuffixOfTest = isSuffixOf "there!" "oh hey there!"
 
+-- partition takes a predicate and a list and returns a double of lists. One list contains elements that satisfy the predicate and the other 
+-- contains the rest of the elements. 
+partitionTest :: ([Int], [Int])
+partitionTest = partition (<6) [1..10]
+
 -- find takes a predicate and a list and returns a Maybe value. That is, either Nothing or Just _, where _ is the element you searched for.
 findTest :: Maybe Char
 findTest = find (=='a') "this is a cat"
