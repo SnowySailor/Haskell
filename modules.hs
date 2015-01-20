@@ -108,7 +108,7 @@ spanExample =
 breakOn :: ([Int], [Int])
 breakOn = break (==4) [1..10]
 
--- sort just sorts a list. The elements of the list must e of the Ord typeclass because they need to be able to be ordered.
+-- sort just sorts a list. The elements of the list must be of the Ord typeclass because they need to be able to be ordered.
 sort' :: [Int]
 sort' = sort [1,5,1,3,6,1,88,2,6,4,23]
 
@@ -233,9 +233,11 @@ insert'' :: [Int]
 insert'' = insert 4 [1,2,6,2,7,4,10,2,4,2,3,6,2,3,6,2,3,6]
 
 -- IMPORTANT --
--- We have our length, take, drop, splitAt, !!, and replicate functions, but they cna cause some problems because they either take or return
+-- We have our length, take, drop, splitAt, !!, and replicate functions, but they can cause some problems because they either take or return
 -- an Int value. Say you wanted to find the average value of a [Int]. You could do something like 'let xs = [1..6] in sum xs / length xs' in 
 -- order to get that, but Haskell would yell at you since you can't divide with an Int value. You can use genericLength (or genaricANYTHING)
 -- instead of length,  because genericLength returns a Num value, which can represent a floating number instead of an Int. Doing 
 -- 'let xs = [1..6] in sum xs / genericLength xs' would give us a real result. 
 
+-- We also have our nub, delete, union, intersect, and group functions that take Eq values. We can call nubBy, deleteBy, unionBy, intersectBy,
+-- and groupBy. 
