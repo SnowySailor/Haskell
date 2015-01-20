@@ -147,11 +147,13 @@ isSuffixOfTest :: Bool
 isSuffixOfTest = isSuffixOf "there!" "oh hey there!"
 
 -- partition takes a predicate and a list and returns a double of lists. One list contains elements that satisfy the predicate and the other 
--- contains the rest of the elements. 
+-- contains the rest of the elements. It is important to remember that it's different from span or break in that it goes through the
+-- entire list, while span and break both end when the predicate is no longer met.
 partitionTest :: ([Int], [Int])
 partitionTest = partition (<6) [1..10]
 
--- find takes a predicate and a list and returns a Maybe value. That is, either Nothing or Just _, where _ is the element you searched for.
+-- find takes a predicate and a list and returns the first element that satisfies it (a Maybe value.) That is, either Nothing or Just _, where _ 
+-- is the element you searched for.
 findTest :: Maybe Char
 findTest = find (=='a') "this is a cat"
 
@@ -159,3 +161,81 @@ findTest = find (=='a') "this is a cat"
 -- an empty list. 
 stocks' :: Maybe (Double, Int, Int, Int)
 stocks' = find (\(val, y, m, d) -> val > 1000) $ [(994.4,2008,9,1),(995.2,2008,9,2),(999.2,2008,9,3),(1001.4,2008,9,4),(998.3,2008,9,5)]
+
+-- 'elem' and 'notElem' check if an element is a part of a list.
+
+-- elemIndex is like elem, but it returns the index of the first element in a list that we're looking for. 
+elemIndexTest :: Maybe Int
+elemIndexTest = elemIndex 4 [1,2,3,4,5,6]
+
+-- elemIndicies is like elemIndex, but it returns a list of indices. Or it can return an empty list if there is nothing there.
+elemIndicesTest :: [Int]
+elemIndicesTest = elemIndices 5 [1,2,3,4,5,1,7,2,6,5,2,7,3,5]
+
+-- findIndex takes a predicate and a list and returns a Maybe value upon the first occourence of a match
+findIndexTest :: Maybe Int
+findIndexTest = findIndex (`elem` [1..3]) [7,5,7,4,3,8,54,2,1]
+
+-- findIndices takes a list and a predicate and returns all indexes of elements that match.
+findIndicesTest :: [Int]
+findIndicesTest = findIndices (`elem` [1..3]) [8,3,7,1,4,7,2,7,0,4,2,4,6,1,7,3]
+
+-- zip3 and zipWith3 are like zip and zipWith, but they zip 3 lists together. zip_/zipWith_ go all the way up to 7.
+zip3' :: [(Int, Int, Int)]
+zip3' = zip3 [1,2,3] [4,5,6] [7,8,9]
+zipWith3' :: [Int]
+zipWith3' = zipWith3 (\x y z -> x + y + z) [1,2,3] [4,5,2,2] [2,2,3]
+
+-- 'lines' is a useful function because it breaks up all new lines into new elements in a list
+lines' :: [String]
+lines' = lines "hello\nthere\nI\nam\na\nlist"
+
+-- unlines is the opposite of lines. It takes a list of strings and joins them together using \n
+unlines' :: String
+unlines' = unlines lines'
+
+-- words is for splitting up a string of words into a list of words. Breaks on a space. 
+words' :: [String]
+words' = words "hello there I am a string."
+
+-- unwords is the exact opposite of words. Takes a list of strings and joins them on a space.
+unwords' :: String
+unwords' = unwords words'
+
+-- delete takes an element and a list and deletes the first occurence of that element in the list
+delete' :: String
+delete' = delete 'h' "hey there ghang!"
+delete'' :: String
+delete'' = delete 'h' . delete 'h' . delete 'h' $ "hey there ghang!"
+
+-- '\\' is the list difference function. It first takes a list and then a list of elements to remove from that list. If you have a list 
+-- [1,2,2,3,4,5] and a secondary list [1,2,3], then it'll return [2,4,5] because there was only one 2 in the list of items to remove.
+removeSet :: [Int]
+removeSet = [1..10] \\ [1,5,6,6]
+-- doing this is like doing: delete 1 . delete 5 . delete 6 . delete 6 $ [1..10]
+
+-- union is a function that joins lists together, but removes any duplicates. Duplicates are removed from the second list.
+union' :: [Int]
+union' = union [1..7] [5..10]
+
+-- intersect returns a list of elements that are in both lists provided. 
+intersect' :: [Char]
+intersect' = intersect "hey there man." "what's up dude?"
+intersect'' :: [Int]
+intersect'' = intersect [1,2,3,4,5,5,5] [4,5,6,7,8]
+
+-- insert takes an element and a list of elements. It will go through the list until it finds an element that is greater than the element
+-- you want to insert. Once it finds an element greater, it will insert your element right before it. If you do this on a sorted list, it will
+-- keep the list sorted. 
+insert' :: String
+insert' = insert 'g' $ ['a'..'f'] ++ ['h'..'z']
+insert'' :: [Int]
+insert'' = insert 4 [1,2,6,2,7,4,10,2,4,2,3,6,2,3,6,2,3,6]
+
+-- IMPORTANT --
+-- We have our length, take, drop, splitAt, !!, and replicate functions, but they cna cause some problems because they either take or return
+-- an Int value. Say you wanted to find the average value of a [Int]. You could do something like 'let xs = [1..6] in sum xs / length xs' in 
+-- order to get that, but Haskell would yell at you since you can't divide with an Int value. You can use genericLength (or genaricANYTHING)
+-- instead of length,  because genericLength returns a Num value, which can represent a floating number instead of an Int. Doing 
+-- 'let xs = [1..6] in sum xs / genericLength xs' would give us a real result. 
+
