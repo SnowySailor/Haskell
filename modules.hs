@@ -5,6 +5,8 @@
 -- When importing modules, import them before degining any functions and each on thier own line. 
 import Data.List
 import qualified Data.Map as M
+import Data.Function (on)
+import Data.Char
 -- Data.List contains useful functions for dealing with lists. 
 -- One function in the Data.list moduel is the nub function, which takes a list and returns a list that has any duplicate elements removed.
 -- Function to find the length of a list excluding duplicate elements.
@@ -240,4 +242,32 @@ insert'' = insert 4 [1,2,6,2,7,4,10,2,4,2,3,6,2,3,6,2,3,6]
 -- 'let xs = [1..6] in sum xs / genericLength xs' would give us a real result. 
 
 -- We also have our nub, delete, union, intersect, and group functions that take Eq values. We can call nubBy, deleteBy, unionBy, intersectBy,
--- and groupBy. 
+-- and groupBy. These functions take a function that returns a boolean value to determine equality. 
+
+-- Then we have functions like sortBy, insertBy, maximumBy, and minimumBy that take a function that returns an ORDERING. So GT, LT or EQ.
+-- For example, sort is the same as sortBy compare because you're sorting by what element is larger. 
+-- Function to allow us to sort a list of lsts by the length of the sublist. 
+sortList :: [[Int]] -> [[Int]]
+sortList xs = sortBy (compare `on` length) xs
+
+
+-- DATA.CHAR --
+-- Data.Char contains a bunch of functions that will give you information about a character that you give them. 
+-- Some of these functions consist of isControl, isSpace, isLower, isUpper, isAlpha, isAlphaNum, isPrint, isDigit, isOctDigit, isHexDigit,
+-- etc, etc. ALL of these predicates have the type signature of 'Char -> Bool'
+-- Almost all the time, you'll use these functions to filter strings. 
+-- Say we want to see if a username is all alphanumeric for an account.
+isAlphaNumTest :: Bool
+isAlphaNumTest = all isAlphaNum "bobby823"
+isAlphaNumTest' :: Bool
+isAlphaNumTest' = all isAlphaNum "this is a name"
+
+-- Let's use isSpace to emulate words from Data.List
+words'' :: [String]
+words'' = filter (not . any isSpace) . groupBy ((==) `on` isSpace) $ "hello there I am a list"
+
+-- Data.Char also has a function that returns a data type of GeneralCategory. These General Categories are things like Space, UppercaseLetter, 
+-- MathSymbol, etc.
+generalCategoryTest :: [GeneralCategory]
+generalCategoryTest = map generalCategory " h19*/1>|?"
+-- The GeneralCategory typeclass is a part of the Eq typeclass, so you can do things like 'generalCategory 'a' == LowercaseLetter'
