@@ -4,7 +4,7 @@
 
 -- When importing modules, import them before degining any functions and each on thier own line. 
 import Data.List
-import qualified Data.Map as M
+import qualified Data.Map as Map
 import Data.Function (on)
 import Data.Char
 -- Data.List contains useful functions for dealing with lists. 
@@ -271,3 +271,52 @@ words'' = filter (not . any isSpace) . groupBy ((==) `on` isSpace) $ "hello ther
 generalCategoryTest :: [GeneralCategory]
 generalCategoryTest = map generalCategory " h19*/1>|?"
 -- The GeneralCategory typeclass is a part of the Eq typeclass, so you can do things like 'generalCategory 'a' == LowercaseLetter'
+
+-- Encoding by shifting ca character by a certain number of ascii numbers
+encode :: Int -> String -> String
+encode shift msg = 
+			let 
+				ords = map ord msg
+				shifted = map (+shift) ords
+			in map chr shifted
+-- We could also write it in one line like this
+encode' :: Int -> String -> String
+encode' shift msg = map (chr . (+shift) . ord) msg
+
+-- Now let's make a decode function
+decode :: Int -> String -> String
+decode shift msg = encode (negate shift) msg
+
+-- DATA.MAP --
+-- Association lists are used to store key-value pairs where ordering doesn't really matter. We could use association lists to store phone
+-- numbers and names. We don't care about the order they're stored. We just want to be able to access the right value for the key.
+
+-- Function for calling the more-important findKey function
+associateTest :: String -> String
+associateTest key = let phones = [("betty","555-2938")  
+    						,("bonnie","452-2928")  
+		    				,("patsy","493-2928")  
+		    				,("lucille","205-2928")  
+		    				,("wendy","939-8282")  
+		    				,("penny","853-2492")]
+		    	in findKey key phones
+
+-- Function to find the value of something given the key
+findKey :: (Eq a) => a -> [(a,v)] -> v
+findKey key xs = snd . head . filter (\(k,v) -> key == k) $ xs
+
+-- But what if our key doesn't exist in a list? We would crash the program. So let's use Maybe values
+findKey' :: (Eq k) => k -> [(k,v)] -> Maybe v
+findKey' _ [] = Nothing
+findKey' key ((k,v):xs) = if key == k
+								then Just v
+								else findKey' key xs
+
+-- Same as the other function above, but this one uses folds.
+findKey'' :: (Eq a) => a -> [(a,v)] -> Maybe v
+findKey'' key = foldl (\acc (k,v) -> if key == k then Just v else acc) Nothing 
+
+-- These were all examples of the lookup function from Data.Map. 
+-- The Data.Map module offers association lists that are much faster beause they are impimented internally with trees, and it also offers a lot
+-- of useful function. From now on, I'll say we're working with maps instead of association lists
+-- Imported qualified Data.Map at the top. 
