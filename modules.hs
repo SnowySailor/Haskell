@@ -254,7 +254,7 @@ sortList xs = sortBy (compare `on` length) xs
 -- DATA.CHAR --
 -- Data.Char contains a bunch of functions that will give you information about a character that you give them. 
 -- Some of these functions consist of isControl, isSpace, isLower, isUpper, isAlpha, isAlphaNum, isPrint, isDigit, isOctDigit, isHexDigit,
--- etc, etc. ALL of these predicates have the type signature of 'Char -> Bool'
+-- etc, etc. (http://learnyouahaskell.com/modules#data-char) ALL of these predicates have the type signature of 'Char -> Bool'
 -- Almost all the time, you'll use these functions to filter strings. 
 -- Say we want to see if a username is all alphanumeric for an account.
 isAlphaNumTest :: Bool
@@ -271,3 +271,19 @@ words'' = filter (not . any isSpace) . groupBy ((==) `on` isSpace) $ "hello ther
 generalCategoryTest :: [GeneralCategory]
 generalCategoryTest = map generalCategory " h19*/1>|?"
 -- The GeneralCategory typeclass is a part of the Eq typeclass, so you can do things like 'generalCategory 'a' == LowercaseLetter'
+-- topUpper converts a character to its upper case form. Spaces, numbers, and the like will remain unchanged.
+-- toLower converts a character to lower case. 
+-- toTitle converts a character to its title case (which is upper case in most cases)
+-- digitToInt converts a character to an integer. To succeed, the character must be in '0'..'9', 'a'..'f', or 'A'..'F'
+digitToInt' :: [Int]
+digitToInt' = map digitToInt "FF85AB"
+
+-- intToDigit is the opposite of digitToInt in that it takes an int and it converts it to the digit form.
+
+-- chr and ord convert numbers to characters and characters to numbers. 
+chrOrd :: Int
+chrOrd = ord . chr $ 1
+mapOrd :: [Int]
+mapOrd = map ord "abcdefgh"
+
+
