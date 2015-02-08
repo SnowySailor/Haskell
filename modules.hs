@@ -271,7 +271,6 @@ words'' = filter (not . any isSpace) . groupBy ((==) `on` isSpace) $ "hello ther
 generalCategoryTest :: [GeneralCategory]
 generalCategoryTest = map generalCategory " h19*/1>|?"
 -- The GeneralCategory typeclass is a part of the Eq typeclass, so you can do things like 'generalCategory 'a' == LowercaseLetter'
-<<<<<<< HEAD
 -- topUpper converts a character to its upper case form. Spaces, numbers, and the like will remain unchanged.
 -- toLower converts a character to lower case. 
 -- toTitle converts a character to its title case (which is upper case in most cases)
@@ -286,9 +285,6 @@ chrOrd :: Int
 chrOrd = ord . chr $ 1
 mapOrd :: [Int]
 mapOrd = map ord "abcdefgh"
-
-
-=======
 
 -- Encoding by shifting ca character by a certain number of ascii numbers
 encode :: Int -> String -> String
@@ -338,4 +334,3 @@ findKey'' key = foldl (\acc (k,v) -> if key == k then Just v else acc) Nothing
 -- The Data.Map module offers association lists that are much faster beause they are impimented internally with trees, and it also offers a lot
 -- of useful function. From now on, I'll say we're working with maps instead of association lists
 -- Imported qualified Data.Map at the top. 
->>>>>>> 6b692c6619a9c7e6634f7eb20ef9bde909172616
