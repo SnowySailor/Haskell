@@ -333,4 +333,65 @@ findKey'' key = foldl (\acc (k,v) -> if key == k then Just v else acc) Nothing
 -- These were all examples of the lookup function from Data.Map. 
 -- The Data.Map module offers association lists that are much faster beause they are impimented internally with trees, and it also offers a lot
 -- of useful function. From now on, I'll say we're working with maps instead of association lists
--- Imported qualified Data.Map at the top. 
+-- Imported qualified Data.Map at the top.  
+-- We'll always want to use Data.Map for when we have key-value associations unless the keys and values aren't a part of the Ord typeclass.
+
+-- Map.fromList takes an association list and returns a map with the same associations. If there are duplicate keys, it discards the ones
+-- that are closer to the beginning. 
+fromList' :: Map.Map Int Int
+fromList' = Map.fromList [(1,2),(3,4),(3,2),(5,5)]
+-- When we were doing maps with just regular lists, we only had to make the keys and values Eq, but with association lists, we need to make the
+-- types Ord because that's the type of the fromList function. 
+
+-- empty just returns an empty map. 
+empty' :: Map.Map Int Int
+empty' = Map.empty
+
+-- insert takes a key, value, and map ad adds the key and value to the map.
+insertMap :: Map.Map Int Int
+insertMap = Map.insert 50 100 Map.empty
+insertMap' :: Map.Map Int Int
+insertMap' = Map.insert 50 100 $ Map.insert 3 10 $ Map.insert 60 8 $ Map.empty
+
+-- We can impliment out own fromList using folds and Map.insert. 
+fromList'' :: (Ord k) => [(k,v)] -> Map.Map k v
+fromList'' = foldr (\(k,v) acc -> Map.insert k v acc) Map.empty
+
+-- null checks if a map is empty.
+nullTest :: Bool
+nullTest = Map.null Map.empty
+
+-- size reports the size of a map.
+sizeTest :: Int
+sizeTest = Map.size $ Map.fromList [(2,4),(3,3),(4,2),(5,4),(6,4)]
+
+-- singleton takes a key and a value and returns a map that has only one mapping
+singletonTest :: Map.Map Int Int
+singletonTest = Map.singleton 3 9
+
+-- lookup takes a key and returns a Maybe value.
+lookupTest :: Maybe Int
+lookupTest = Map.lookup 1 $ Map.fromList [(1,2), (3,4), (5,6)]
+
+-- member takes a key and a map and checks to see if they key is in the map.
+memberTest :: Bool
+memberTest = Map.member 3 $ Map.fromList [(1,2), (3,4), (5,6)]
+
+-- map works like the default map, but it only maps over the values in the maps.
+mapTest :: Map.Map Int Int
+mapTest = Map.map (*100) $ Map.fromList [(1,2), (3,4), (5,6)]
+-- filter works like the default filter, but it filters by the values
+filterTest :: Map.Map Int Int
+filterTest = Map.filter (`elem` [1,3,4,6]) $ Map.fromList [(1,2), (3,4), (5,6)]
+
+-- toList is the inverse of fromList. Takes a map and returns a list.
+toListTest :: [(Int, Int)]
+toListTest = Map.toList $ Map.fromList [(1,2), (3,4), (5,6)]
+
+-- keys returns a list of keys
+keysTest :: [Int]
+keysTest = Map.keys $ Map.fromList [(1,2), (3,4), (5,6)] 
+
+-- elems returns a list of elements
+elemsTest :: [Int]
+elemsTest = Map.elems $ Map.fromList [(1,2), (3,4), (5,6)]
