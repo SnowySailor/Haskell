@@ -395,3 +395,34 @@ keysTest = Map.keys $ Map.fromList [(1,2), (3,4), (5,6)]
 -- elems returns a list of elements
 elemsTest :: [Int]
 elemsTest = Map.elems $ Map.fromList [(1,2), (3,4), (5,6)]
+
+-- What if we have a few numbers for one person like this?
+	 -- phoneBook =   
+     --   [("betty","555-2938")  
+     --   ,("betty","342-2492")  
+     --   ,("bonnie","452-2928")  
+     --   ,("patsy","493-2928")  
+     --   ,("patsy","943-2929")  
+     --   ,("patsy","827-9162")  
+     --   ,("lucille","205-2928")  
+     --   ,("wendy","939-8282")  
+     --   ,("penny","853-2492")  
+     --   ,("penny","555-2111")  
+     --   ]
+-- If we use fromList, we'll lose some of the numbers in there. So we can use Map.fromListWith instead. 
+phoneBookToMap :: (Ord k) => [(k,String)] -> Map.Map k String
+phoneBookToMap xs = Map.fromListWith (\number1 number2 -> number1 ++ ", " ++ number2) xs
+-- This takes all the duplicate values and puts them into one value. 
+phoneBookToMap' :: (Ord k) => [(k, String)] -> Map.Map k [String]
+phoneBookToMap' xs = Map.fromListWith (++) $ map (\(k,v) -> (k,[v])) xs
+
+-- If we have an association list of numbers, we can get it to take the max or the min.
+maxNums :: (Ord k, Ord v) => [(k,v)] -> Map.Map k v
+maxNums xs = Map.fromListWith max xs
+
+-- InsertWith is like formListWith, so if there is a duplicate key, the function you give insertWith decides what happens with the value.
+insertWithTest :: (Ord k) => k -> String -> [(k,String)] -> Map.Map k String
+insertWithTest k v xs = Map.insertWith (\val2 val1 -> val1 ++ " " ++ val2) k v $ Map.fromList xs
+
+
+-- DATA.SET --
