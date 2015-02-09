@@ -333,7 +333,7 @@ findKey'' key = foldl (\acc (k,v) -> if key == k then Just v else acc) Nothing
 -- These were all examples of the lookup function from Data.Map. 
 -- The Data.Map module offers association lists that are much faster beause they are impimented internally with trees, and it also offers a lot
 -- of useful function. From now on, I'll say we're working with maps instead of association lists
--- Imported qualified Data.Map at the top. 
+-- Imported qualified Data.Map at the top.  
 -- We'll always want to use Data.Map for when we have key-value associations unless the keys and values aren't a part of the Ord typeclass.
 
 -- Map.fromList takes an association list and returns a map with the same associations. If there are duplicate keys, it discards the ones
