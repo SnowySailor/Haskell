@@ -7,6 +7,7 @@ import Data.List
 import qualified Data.Map as Map
 import Data.Function (on)
 import Data.Char
+import qualified Data.Set as Set
 -- Data.List contains useful functions for dealing with lists. 
 -- One function in the Data.list moduel is the nub function, which takes a list and returns a list that has any duplicate elements removed.
 -- Function to find the length of a list excluding duplicate elements.
