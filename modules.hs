@@ -421,9 +421,50 @@ phoneBookToMap' xs = Map.fromListWith (++) $ map (\(k,v) -> (k,[v])) xs
 maxNums :: (Ord k, Ord v) => [(k,v)] -> Map.Map k v
 maxNums xs = Map.fromListWith max xs
 
--- InsertWith is like formListWith, so if there is a duplicate key, the function you give insertWith decides what happens with the value.
+-- InsertWith is like frommListWith, so if there is a duplicate key, the function you give insertWith decides what happens with the value.
 insertWithTest :: (Ord k) => k -> String -> [(k,String)] -> Map.Map k String
 insertWithTest k v xs = Map.insertWith (\val2 val1 -> val1 ++ " " ++ val2) k v $ Map.fromList xs
 
 
 -- DATA.SET --
+-- A lot of the functions in Data.Set clash with those in Prelude and Data.Map, so it's imported as Set at the top of this file. 
+-- What if we want to see what elements are used in two lists?
+-- fromList generates a set of unique values.
+usedInBoth :: (Set.Set Char -> Set.Set Char -> a) -> a
+usedInBoth x = 
+			let 
+				text1 = "I just had an anime dream. Anime... Reality... Are they so different?"  
+				text2 = "The old man left his garbage can out and now his trash is all over my lawn!"
+				set1 = Set.fromList text1
+				set2 = Set.fromList text2 
+			in
+				x set1 set2
+-- We can use the difference function to tell us which values are in one but not the other. (feed to usedInBoth)
+-- We can use the union function to see what characters are used by both sentences. (feed to usedInBoth)
+
+-- The null, size, member, empty, singleton, insert, and delete functions all work as you would expect them to from Data.Map.
+
+-- Set.isSubsetOf will tell us if a set exists within a set that we provide.
+subset :: [Char] -> [Char] -> Bool
+subset x s = Set.fromList x `Set.isSubsetOf` Set.fromList s
+
+-- Set.isProperSubsetOf will check to see if a set is part of a set, but is not the whole set. So "hello" "hello" returns False, but 
+-- "hello" "hello there" returns True
+properSubset :: [Char] -> [Char] -> Bool
+properSubset x s = Set.fromList x `Set.isProperSubsetOf` Set.fromList s
+
+-- We can also filter a set. 
+filterSet :: [Int] -> Set.Set Int
+filterSet x = Set.filter odd $ Set.fromList x
+
+-- We can then also map a function over a set. 
+mapSet :: [Int] -> Set.Set Int
+mapSet x = Set.map (+1) $ Set.fromList x
+
+-- It's much faster to nub a list by using Sets because they are automatically converted to a list of unique characters with Set.fromList
+setNub :: [Char] -> [Char]
+setNub xs = Set.toList $ Set.fromList xs
+-- setNub is faster on longer lists, but it doesn't preserve the ordering of the list, unfortunately. 
+
+
+-- MAKING OUR OWN MODULES -- 
