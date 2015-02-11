@@ -8,6 +8,10 @@ import qualified Data.Map as Map
 import Data.Function (on)
 import Data.Char
 import qualified Data.Set as Set
+--import Geometry
+import qualified Geometry.Sphere as Sphere
+import qualified Geometry.Cuboid as Cuboid
+import qualified Geometry.Cube as Cube
 -- Data.List contains useful functions for dealing with lists. 
 -- One function in the Data.list moduel is the nub function, which takes a list and returns a list that has any duplicate elements removed.
 -- Function to find the length of a list excluding duplicate elements.
@@ -469,3 +473,15 @@ setNub xs = Set.toList $ Set.fromList xs
 
 -- MAKING OUR OWN MODULES -- 
 -- Created a file called Geometry.hs
+-- Each module can have its own submodules. For example, I've created the Sphere, Cuboid, and Cube submodules to Geometry, each in their
+-- own files.
+
+-- IF WE WANT TO HAVE THE MODULES IN A SUBFOLDER, WE HAVE TO DO 'import [SUBFOLDER].[MODULE]' and we have to name the module "[SUBFOLDER].[MODULE]"
+go :: Float
+go = Sphere.volume 3.264
+
+go' :: Float
+go' = Cuboid.area 5 9 3
+
+go'' :: Float
+go'' = Cube.volume 9
