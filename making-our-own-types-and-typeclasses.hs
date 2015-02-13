@@ -37,3 +37,38 @@ mapFunction :: Float -> Float -> [Shape]
 mapFunction a b = map (Circle (Point 5.0 4.0)) [a,b,5,6,7]
 
 -- We have a good Shape data type, but we can make it better by implimenting a Point data type (line 14)
+
+
+-- RECORD SYNTAX --
+
+-- If we want to make a person, we could define it as
+-- data Person = Person String String Int Float String String deriving (Show)
+-- But then we would have to define a lot of different functions to get a specific value, and the placement of the differnet types doesn't make
+-- it apparent what value goes where.
+-- Instead, we can define it like this
+data Person = Person { 
+	firstName :: String,
+	lastName :: String,
+	age :: Int,
+	height :: Float,
+	phoneNumber :: String,
+	flavor :: String
+} deriving (Show)
+-- Now, Haskell already made functions for firstName, lastName, etc. to return the values.
+
+-- There's also another benefit to using record syntax. If we just define a Car as
+-- data Car = Car String String Int deriving (Show)
+-- Then when we try to show a car, it only prints out "Car "Ford" "Mustang" 1967"
+-- If we define a car as 
+data Car = Car {
+	company :: String,
+	model :: String,
+	year :: Int
+} deriving (Show)
+-- Then we show a car
+doCar :: Car
+doCar = Car {company = "Ford", model = "Mustang", year = 1967}
+
+-- It will display like this:
+-- Car {company = "Ford", model = "Mustang", year = 1967}
+-- We also don't have to put the specific names in a certain order because we are assigning using a key-value-ish system.
