@@ -1,5 +1,13 @@
 -- MAKING OUR OWN TYPES AND TYPECLASSES --
-
+module Shapes (
+	Point(..), 
+	Shape(..),
+	surface,
+	nudge,
+	baseCircle,
+	baseRectangle
+) where -- Export types like [TYPE]([Constructors]|..)
+	
 -- ALGEBRAIC DATA TYPES INTRO --
 data Bool = False | True
 -- We use 'data' to say that we're defining a new data type. The part before the = is the name of the type, and the parts after are the value
@@ -37,7 +45,18 @@ mapFunction :: Float -> Float -> [Shape]
 mapFunction a b = map (Circle (Point 5.0 4.0)) [a,b,5,6,7]
 
 -- We have a good Shape data type, but we can make it better by implimenting a Point data type (line 14)
+-- How about a function that nudgs a shape?
+nudge :: Shape -> Float -> Float -> Shape
+nudge (Circle (Point x y) r) a b = Circle (Point (x+a) (y+b)) r
+nudge (Rectangle (Point x1 y1) (Point x2 y2)) a b = Rectangle (Point (x1+a) (y1+b)) (Point (x2+a) (y2+b))
 
+-- If we don't want to have to deal directly with points, we can define a function that wil create a base circle or a base rectangle and then
+-- just nudge that.
+baseCircle :: Float -> Shape
+baseCircle r = Circle (Point 0 0) r
+baseRectangle :: Float -> Float -> Shape
+baseRectangle width height = Rectangle (Point 0 0) (Point width height)
+-- Now we can just nudge in order to declare the new position without having to type out Point all the time. 
 
 -- RECORD SYNTAX --
 
