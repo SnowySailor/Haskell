@@ -7,8 +7,10 @@ module Shapes (
 	baseCircle,
 	baseRectangle
 ) where -- Export types like [TYPE]([Constructors]|..)
+
 	
 -- ALGEBRAIC DATA TYPES INTRO --
+
 data Bool = False | True
 -- We use 'data' to say that we're defining a new data type. The part before the = is the name of the type, and the parts after are the value
 -- constructors. They're the different values the type can have. 
@@ -58,6 +60,7 @@ baseRectangle :: Float -> Float -> Shape
 baseRectangle width height = Rectangle (Point 0 0) (Point width height)
 -- Now we can just nudge in order to declare the new position without having to type out Point all the time. 
 
+
 -- RECORD SYNTAX --
 
 -- If we want to make a person, we could define it as
@@ -91,3 +94,26 @@ doCar = Car {company = "Ford", model = "Mustang", year = 1967}
 -- It will display like this:
 -- Car {company = "Ford", model = "Mustang", year = 1967}
 -- We also don't have to put the specific names in a certain order because we are assigning using a key-value-ish system.
+
+
+-- TYPE PARAMETERS --
+
+-- A value constuctor can take a few parameters and return a result. As an example, Car takes three values and produces a car value. 
+-- Type constuctors can also take values just like value constuctors to create new types. 
+-- data Maybe a = Nothing | Just a
+-- Here, the a is the type parameter. Because there is a type parameter involved, we call this a type constuctor. Depending on what
+-- we want this type constuctor to hold, it can produce Maybe Int, Maybe Car, etc. No value will have a type of just Maybe because it's not
+-- exactly a type. It's a type constuctor. In order for it to be a type, it needs to have all of its parameters filled up.
+-- So if we pass in a Char to Maybe, we get Maybe Char. The type of "Just 'a'" is Maybe Char.
+-- We used a type that has a type parameter before Maybe. Lists have a type paramater. [Int], [Char], [[String]]. However you can't just have []
+
+-- Type parameters are useful because ti allows us to make different types based on what you want contained. If the a in Just a is a String,
+-- then the a in Maybe a is also a String.
+
+-- The type of Nothing is Maybe a because its type is polymorphic. If some funciton requires Maybe Int, we can give it Nothing because Nothing 
+-- doesn't contain any values anyway, so it doesn't matter. The type Maybe a can act as Maybe Int or Maybe Double just like 5 can act as
+-- an Int or Double. An empty list can act as a list of anything. That's why we can do [1,2,3] ++ [].
+
+-- Using type parameters is very beneficial, but only when using them makes sense. For example, we wouldn't define Car as 
+-- {company :: a, model :: b, year :: c} because company and model will always be a String and the year will always be an Int. If our type
+-- acts as some kind of a box, it's good to use them. 
