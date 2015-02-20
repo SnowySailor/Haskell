@@ -117,3 +117,24 @@ doCar = Car {company = "Ford", model = "Mustang", year = 1967}
 -- Using type parameters is very beneficial, but only when using them makes sense. For example, we wouldn't define Car as 
 -- {company :: a, model :: b, year :: c} because company and model will always be a String and the year will always be an Int. If our type
 -- acts as some kind of a box, it's good to use them. 
+-- Here's a funciton to show the properties of a car.
+tellCar :: Car -> String
+tellCar (Car {company = c, model = m, year = y}) = "This " ++ c ++ " " ++ m ++ " was made in " ++ show y
+
+-- This function would have to be made if the car was declared with types a, b, and c.
+-- tellCar' :: (Show a) => Car String String a -> String
+-- tellCar' (Car {company = c, model = m, year = y}) = "This " ++ c ++ " " ++ m ++ " was made in " ++ show y
+-- As you can see the type declaration is very gross looking and only benefits us in that we can use any data type that is of the Show typeclass
+
+-- So we would rather just use Car String String Int to make it simple. We usually use type parameters when the type inside of the value doesn't
+-- really need to be a certian one for the type to work. A list of stuff is just a list of stuff. If we want it to be a list of integers, 
+-- we can specify that in the function's type declaration. The same goes for Maybe values. Maybe represents having either nothing or have one
+-- of something. It doesn't matter what the type of that thing is. 
+
+-- Another example of a parameterized type that we've met is Map k v from Data.Map. The k is the key in the map, and the v is the value. This
+-- is an example of where type parameters are useful. This allows us to have two types, but it doesn't matter what types they actually are. 
+-- So you can have a key that's an Int and a value that's a String. Or the other way around. Having maps parameterized allows us to have
+-- mappings from any type to any other type as long as they key is within the Ord typeclass. 
+
+-- It's a very strong convention to never add typeclass constraints in data declarations because we don't benefit a lot. We just end up writing 
+-- more class constraints.
