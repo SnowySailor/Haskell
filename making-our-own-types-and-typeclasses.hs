@@ -136,5 +136,27 @@ tellCar (Car {company = c, model = m, year = y}) = "This " ++ c ++ " " ++ m ++ "
 -- So you can have a key that's an Int and a value that's a String. Or the other way around. Having maps parameterized allows us to have
 -- mappings from any type to any other type as long as they key is within the Ord typeclass. 
 
+-- data (Ord k) => Map k v = ...
 -- It's a very strong convention to never add typeclass constraints in data declarations because we don't benefit a lot. We just end up writing 
--- more class constraints.
+-- more class constraints. If we do have the Ord k in the data delcaration, then we won't have to write Ord k when writing a function that uses
+-- Map, but if we don't put it in, we don't need to have Ord k in our function type delcaration. 
+-- An example of this is toList. It's defined like toList :: Map k v -> [(k,v)]
+-- If we had Ord k in our data declaration, we would need to write toList :: (Ord k) => Map k v -> [(k,v)] even though the function does nothing
+-- with comparing by order.
+-- So don't put typeclass constraints into data declarations even if it makes sense at the time because you'll have to put them into the
+-- function declarations either way. 
+
+-- Here'd a 3D vector type
+data Vector a = Vector a a a deriving (Show)
+-- Function to add two vectors.
+vplus :: (Num t) => Vector t -> Vector t -> Vector t
+(Vector a b c) `vplus` (Vector d e f) = Vector (a+d) (b+e) (c+f)
+
+-- Function to multiply two vectors together
+vmult :: (Num a) => Vector a -> Vector a -> Vector a
+(Vector a b c) `vmult` (Vector d e f) = Vector (a*d) (b*e) (c*f)
+
+-- Function to add together the products of the scalar values of two vectors
+scalarMult :: (Num a) => Vector a -> Vector a -> a
+(Vector a b c) `scalarMult` (Vector d e f) = (a*d) + (b*e) + (c*f)
+-- Notice how we didn't put the Num a constraint in the data declaration because we would need to do the same thing in the funciton declaration.
