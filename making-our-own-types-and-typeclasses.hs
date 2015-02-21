@@ -11,7 +11,7 @@ module Shapes (
 	
 -- ALGEBRAIC DATA TYPES INTRO --
 
-data Bool = False | True
+-- data Bool = False | True
 -- We use 'data' to say that we're defining a new data type. The part before the = is the name of the type, and the parts after are the value
 -- constructors. They're the different values the type can have. 
 -- We define data Int = -2147483648 | -2147483647 | ... | -1 | 0 | 1 | 2 | ... | 2147483647 (it doesn't actually have the ... ).
@@ -68,14 +68,14 @@ baseRectangle width height = Rectangle (Point 0 0) (Point width height)
 -- But then we would have to define a lot of different functions to get a specific value, and the placement of the differnet types doesn't make
 -- it apparent what value goes where.
 -- Instead, we can define it like this
-data Person = Person { 
-	firstName :: String,
-	lastName :: String,
-	age :: Int,
-	height :: Float,
-	phoneNumber :: String,
-	flavor :: String
-} deriving (Show)
+--data Person = Person { 
+--	firstName :: String,
+--	lastName :: String,
+--	age :: Int,
+--	height :: Float,
+--	phoneNumber :: String,
+--	flavor :: String
+--} deriving (Show)
 -- Now, Haskell already made functions for firstName, lastName, etc. to return the values.
 
 -- There's also another benefit to using record syntax. If we just define a Car as
@@ -160,3 +160,76 @@ vmult :: (Num a) => Vector a -> Vector a -> Vector a
 scalarMult :: (Num a) => Vector a -> Vector a -> a
 (Vector a b c) `scalarMult` (Vector d e f) = (a*d) + (b*e) + (c*f)
 -- Notice how we didn't put the Num a constraint in the data declaration because we would need to do the same thing in the funciton declaration.
+
+
+-- DERIVED INSTANCES --
+
+-- Typeclassesa are somewhat like Java interfaces, but not exactly. A type can be made an instance of a typeclass if it supports that behavior.
+-- Example: The Int type is an instance of the Eq typeclass because the Eq typeclass defines behavior for stuff that can be equated. And
+-- because Integers can be equated, Int is a part of the Eq typeclass. The real usefulness comes with the functions that act as the interface
+-- for Eq, namely == and /=. If a type is a part of the Eq typeclass, we can use the == function with values of that type. That's why 
+-- 4 == 4 or "foo" /= "bar" typecheck. 
+
+-- Let's look at how Haskell can automatically make our type an instance of Eq, Ord, Enum, Bounded, Show, and Read. Haskell can derive
+-- the behavior of our types if we use teh deriving keyword in our data declaration.
+-- Consider the Person data type
+--data Person = Person {
+--	firstName :: String,
+--	lastName :: String,
+--	age :: Int
+--}
+-- Say we have a list of persons, and none of them are the same. Would it make sense to have to compare two persons to see if two references
+-- are the same person? Yes. So we would add on a "deriving (Eq)" to the data declaration so that we can compare two Persons with ==
+-- When we try to an an ==, Haskell will look to see if the value constructors match. 
+-- ALL VALUES INSIDE OF THE CONSTRUCTOR MUST ALSO BE OF THE EQ TYPECLASS
+-- Since String and Int are both of the Eq typeclass, we're good to go.
+data Person = Person { 
+	firstName :: String,
+	lastName :: String,
+	age :: Int
+} deriving (Eq, Show, Read)
+
+-- Let's test out how People are compared.
+comparePeople :: Bool
+comparePeople = mike == joe
+			where
+				mike = Person {firstName = "Mike", lastName = "Pike", age = 24}
+				joe = Person {firstName = "Joe", lastName = "Bob", age = 36}
+
+-- Of course, since Person is of type Eq, we can use it as the a in functions that have Eq a in their type signature. Such as elem. 
+-- If we had a list of people and wanted to see if a certain one was a part of that list, then we could simply do
+-- [person] `elem` [listofpeople]
+
+-- If we add a derivation of Show to the Person type, we can print it out to the terminal. If we tried to Show before we added it, then 
+-- Haskell would have complained about us trying to show something that it claims it doesn't know how to show. 
+
+-- When we add Read to the Person type, we can read in a value like "let mike = read "Person {firstName=\"Mike\", lastName=\"Diamond\",
+-- age = 43}" :: Person" and it would read in Mike as a Person. 
+
+-- We can also read in parameterized types like Maybe values. 
+-- read "Just 't'" :: Maybe Char
+
+-- The way we can derive instances of the Ord typeclass are by order of definition. Say we define the data type of Bool. 
+-- data Bool = False | True deriving (Ord)
+-- What's cool about this is that the value that's defined first is considered the least, and the one that's defined last is considered
+-- to be the greatest. So True is considered to be greater than False. 
+-- In the Maybe a datatype, the Nothing value is defined before the Just a value, so the value of Nothing is less than Just a. However,
+-- if we compare two Just a values, it just compares the 'a' value. We can't do something like Just (*3) > Just (*2) because those are
+-- functions. 
+
+-- We can use algebraic data types to make enumerations and the Enum and Bounded typeclasses can help us with that. 
+data Day = Monday | Tuesday | Wednesday | Thursday | Friday | Saturday | Sunday deriving (Enum, Bounded, Eq, Ord, Show, Read)
+-- Because all of the value constructors are nullary (take no parameters), we can make these a derivation of the Enum typeclass. 
+-- the Enum typeclass is for things that have predicessors and successors. We also can give it Bounded type because Bounded is for things that
+-- have a definite upper and lower bound. While we're at it, let's make it an instance of a bunch of different typeclasses. 
+-- Because it's a part of the Show and Read typeclass, we can easily change things to and from Strings. 
+doWed :: Day
+doWed = Wednesday
+readDay :: String -> Day
+readDay a = read a :: Day
+
+-- Because Day is a part of the Eq and Ord typeclass, we can equate and compare two days. 
+eqDay :: Day -> Day -> Bool
+eqDay a b = a == b
+compareDay :: Day -> Day -> Ordering
+compareDay a b = a `compare` b
