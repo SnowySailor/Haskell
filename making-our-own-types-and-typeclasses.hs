@@ -233,3 +233,12 @@ eqDay :: Day -> Day -> Bool
 eqDay a b = a == b
 compareDay :: Day -> Day -> Ordering
 compareDay a b = a `compare` b
+
+-- We can also get maxBound :: Day and minBound :: Day. Also we can see what the successors and predicessors are. 
+
+
+-- TYPE SYNONYMS --
+
+-- Because String and [Char] are the same thing, that's done with type synonyms. 
+-- type String = [Char]
+-- We aren't defining a new type here. We're simply making what is essentialy an alaias.
