@@ -7,7 +7,7 @@ module Shapes (
 	baseCircle,
 	baseRectangle
 ) where -- Export types like [TYPE]([Constructors]|..)
-
+import qualified Data.Map as Map
 	
 -- ALGEBRAIC DATA TYPES INTRO --
 
@@ -262,3 +262,18 @@ inPhoneBook name pn pb = (name,pn) `elem` pb
 
 -- Type synonyms can also be parameterized! 
 type AssocList k v = [(k,v)]
+-- Now a function that has the type signature of (Eq k) => k -> AssocList k v -> Maybe v because AssocList is a type constructor that 
+-- can take stuff like Int String. 
+
+-- Just like we can partially apply functions, we can also partially apply type parameters to get what we want. Like this:
+type IntMap v = Map.Map Int v
+-- or we could do it like this 
+-- data IntMap = Map Int
+-- Either way, the IntMap constructor takes one parameter and that is the type that the Int will point to in the map. 
+
+-- The difference between value constructors and type constructors is that we can use a value constructor to make a value, but we can't use 
+-- a type construstor to make a new value. We just are changing the way we can interpret a type. We can't do AssocList [(1,2), (3,4)] but
+-- we can do [(1,2), (3,4)] :: AssocList Int Int, which will make the numbers inside assume the type of Int. 
+
+-- Another cool data type is the Either data type. 
+data Either a b = Left a | Right b deriving (Eq, Ord, Show, Read)
