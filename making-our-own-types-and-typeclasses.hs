@@ -242,3 +242,23 @@ compareDay a b = a `compare` b
 -- Because String and [Char] are the same thing, that's done with type synonyms. 
 -- type String = [Char]
 -- We aren't defining a new type here. We're simply making what is essentialy an alaias.
+-- In Data.Map, we first represented a phonebook with an association list before converting it to a map. Let's look at the phonebook we made.
+-- phoneBook :: [(String, String)]
+-- We see that the type is [(String, String)], but tells us that it maps from Strings to Strings, but not much else.
+-- type PhoneBook = [(String, String)]
+-- Now the type of our phoneBook can be 
+-- phoneBook :: PhoneBook
+-- Let's make a type synonym for String as well.
+type PhoneNumber = String
+type Name = String
+type PhoneBook = [(Name, PhoneNumber)]
+-- Using type synonyms in code is good because it lets people know more about what the code should do and how certain things should be made. 
+-- Here's a function to check if a phone number and name is in a phone book. 
+inPhoneBook :: Name -> PhoneNumber -> PhoneBook -> Bool
+inPhoneBook name pn pb = (name,pn) `elem` pb
+-- If we decided not to use type synonyms, our type would be String -> String -> [(String, String)] -> Bool, which is more confusing. 
+-- It's important to remember not ot go overboard with type synonyms though. They're good when you're working with stuff that is long and
+-- can be confusing, but they shouldn't be used to just replace a simple Int or Char every here and there. 
+
+-- Type synonyms can also be parameterized! 
+type AssocList k v = [(k,v)]
