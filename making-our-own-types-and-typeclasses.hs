@@ -299,3 +299,23 @@ lockerLookup lockerNum mapp =
 								else Left $ "Locker " ++ show lockerNum ++ " is already taken." 
 -- So calling lockerLookup 5 $ Map.fromList [(5,(Free,"382938"))] will return Right "382938".
 -- We could have used Maybe a to represent out results, but then we wouldn't know why they failed. 
+
+
+-- RECURSIVE DATA STRUCTURES --
+
+-- Because we create data types with fields that are of some concrete type, we can also define types that take the same type as a parameter.
+-- Let's use algebraic data types to impliment our own list then
+-- data List a = Empty | Cons a (List a) deriving (Show, Read, Eq, Ord)
+-- The Cons is basically using :, so we're adding to the list. We take a head value and the rest of the list, or we take an empty list. 
+-- Typing "Cons 5 (Cons 4 (Cons 3 Empty))" will give us something like a list where Cons is :. Just like 5:4:3:[]
+
+-- We can define functions to be automatically infix by making them only comprised of special characters, so we can also do the same to 
+-- constructors. 
+infixr 5 :-:
+data List a = Empty | a :-: (List a) deriving (Show, Read, Eq, Ord)
+-- The infix_ makes something right associative or left associative. infixr and infixl. The number defines the fixity. The higher the number,
+-- the more presidence is gets over the others. So * has 7, and + has 6. If you write 4 * 5 + 7, it's the same as (4 * 5) + 7.
+-- Otherwise we just wrote a :-: instead of Cons a.
+-- Writing 5 :-: 5 :-: 4 :-: Empty give us ("5 :-: (5 :-: (4 :-: Empty))"
+-- When we derive the Show typeclass, Haskell is treating this as a prefix function, so it puts parenthesis around the operator.
+-- Remember 4 + 4 and (+) 4 4
