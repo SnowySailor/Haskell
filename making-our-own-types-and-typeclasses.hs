@@ -276,4 +276,26 @@ type IntMap v = Map.Map Int v
 -- we can do [(1,2), (3,4)] :: AssocList Int Int, which will make the numbers inside assume the type of Int. 
 
 -- Another cool data type is the Either data type. 
-data Either a b = Left a | Right b deriving (Eq, Ord, Show, Read)
+-- data Either a b = Left a | Right b deriving (Eq, Ord, Show, Read)
+-- It has two value constructors. If Left it used, then the contents are of type a, and if Right is used, its contents are of type b. So we
+-- can use this type to encapsulate a value of one type or another and then we get a value that's Either a or b. We usually will pattern match
+-- on both Left and Right and we get different stuff based on which one of them it was. 
+
+-- We've used Maybe a to represent the results of computations that could have either failed or not. Sometimes Maybe a isn't good enough because
+-- Nothing doesn't really tell us much other than something has failed. It's good for functions that can only fail one way or if we don't care 
+-- if they fail or not. We can use Either a b to tell us about errors. Left values are used for errors, while Right values are used for results.
+
+-- Here's a little example with lockers. 
+data LockerState = Taken | Free deriving (Eq, Show)
+type Code = String
+type LockerMap = Map.Map Int (LockerState, Code)
+
+lockerLookup :: Int -> LockerMap -> Either String Code
+lockerLookup lockerNum mapp = 
+	case Map.lookup lockerNum mapp of
+		Nothing -> Left $ "Locker " ++ show lockerNum ++ " doesn't exist."
+		Just (state, code) -> if state == Free 
+								then Right code
+								else Left $ "Locker " ++ show lockerNum ++ " is already taken." 
+-- So calling lockerLookup 5 $ Map.fromList [(5,(Free,"382938"))] will return Right "382938".
+-- We could have used Maybe a to represent out results, but then we wouldn't know why they failed. 
