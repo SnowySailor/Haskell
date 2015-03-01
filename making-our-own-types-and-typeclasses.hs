@@ -318,4 +318,45 @@ data List a = Empty | a :-: (List a) deriving (Show, Read, Eq, Ord)
 -- Otherwise we just wrote a :-: instead of Cons a.
 -- Writing 5 :-: 5 :-: 4 :-: Empty give us ("5 :-: (5 :-: (4 :-: Empty))"
 -- When we derive the Show typeclass, Haskell is treating this as a prefix function, so it puts parenthesis around the operator.
--- Remember 4 + 4 and (+) 4 4
+-- Remember 4 + 4 and (+) 4 4 are the same. 
+
+-- Let's make a function to add two of our new lists together.
+-- This is how ++ is defined for normal lists. 
+-- infixr 5 ++
+-- (++) :: [a] -> [a] -> [a]
+-- [] ++ ys = ys
+-- (x:xs) ++ ys = x : (xs ++ ys)
+infixr 5 .++
+(.++) :: List a -> List a -> List a
+Empty	 .++ ys = ys
+(x:-:xs) .++ ys = x :-: (xs .++ ys)
+-- And it works. If we wanted, we could write all of the functions that operated on list types. 
+
+-- Now it's time to make a binary search tree. 
+-- Here is what we can say about trees: It's either empty, or it's an element that contains a value and two trees. 
+data Tree a = EmptyTree | Node a (Tree a) (Tree a) deriving (Show, Eq, Read)
+-- Our furst function is a utility function for just making a new tree with just one node. 
+singleton :: a -> Tree a
+singleton x = Node x EmptyTree EmptyTree
+
+-- Our second function is one that will insert an element into a tree. 
+treeInsert :: (Ord a) => a -> Tree a -> Tree a
+treeInsert x EmptyTree = singleton x
+treeInsert x (Node a left right)
+	| x == a = Node x left right 
+	| x < a  = Node a (treeInsert x left) right 
+	| x > a  = Node a left (treeInsert x right)
+
+-- Function for determining if an element is in a tree
+treeElem :: (Ord a) => a -> Tree a -> Bool
+treeElem _ EmptyTree = False
+treeElem x (Node a left right)
+	| x == a = True
+	| x < a = treeElem x left
+	| x > a = treeElem x right
+
+-- Build a tree with "foldr treeInsert EmptyTree nums" where EmptyTree is the starting value, nums is the list, and treeInsert is our function.
+
+
+-- TYPECLASSES 102 --
+
