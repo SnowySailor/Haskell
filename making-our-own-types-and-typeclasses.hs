@@ -360,3 +360,70 @@ treeElem x (Node a left right)
 
 -- TYPECLASSES 102 --
 
+-- So far, we've learned how to use typeclasses, but we haven't learned how to make our own typeclasses. 
+-- Typeclasses are like interfaces in Java. It defines some behavior, and then, some types that can behave in that way are made instances of
+-- that typeclass. So when we say a type is an instance of a typeclass, that means that we can use functions that typeclass defines with that
+-- type (Show, Eq, Read, Ord, etc.).
+
+-- Typeclasses have nothing to do with classes in things like Java or PHP or Python. 
+
+-- This is how the Eq typeclass is written.
+--class Eq a where
+--	(==) :: a -> a -> Bool
+--	(/=) :: a -> a -> Bool
+--	x == y = not (x /= y)
+--	x /= y = not (x == y)
+-- We define classes like "class [CLASSNAME] [TYPEVARIABLES] where" and then we state the functions of the typeclass. It's not manditory to 
+-- impliment the function bodies themselves but we need the type declarations.
+-- We can't do much with a class once we have it, but once we start making some instances of that class, there is some nice funcitonality. 
+data TrafficLight = Red | Yellow | Green
+-- This defines the different states of a traffic light. We didn't derive any classes for it because we are going to write up an instance by
+-- hand
+instance Eq TrafficLight where
+	Red == Red = True
+	Yellow == Yellow = True
+	Green == Green = True
+	_ == _ = False
+
+-- So 'class' is for making a new Typeclass, but 'instance' is for making a data type an instance of a typeclasss. 
+-- In our example, we just replaced 'a' with 'TrafficLight' since it was the type. 
+
+-- Because == was defined along with /= in the Eq typeclass, we only needed to overwrite one of them in our instance declaratio because it
+-- knows that in order to be true, it need to not be not true. 
+-- If Eq a where defined like
+{- 
+class Eq a where
+    (==) :: a -> a -> Bool
+    (/=) :: a -> a -> Bool
+-}
+-- Then we would have to implement both == and /= in our instance.
+
+-- Now let's make an instance of Show my hand. 
+instance Show TrafficLight where
+	show Red = "Red light!"
+	show Yellow = "Yellow light!"
+	show Green = "Green light!"
+
+-- We can also make a typeclass that is an extention of another typeclass. Like Num.
+-- class (Eq a) => Num a where
+--    ...
+-- So this is like writing "class Num a where" only our 'a' is a part of the Eq typeclass. 
+
+-- The difference between Maybe and TrafficLight is that Maybe isn't a concrete type, so it can be Maybe Int, Maybe String, or Maybe etc.
+-- So how it is Eq'd since all functions need to use concrete types?
+-- We can define Maybe as a non-concrete type, but the 'a' part of it is concrete. 
+{-
+instance Eq (Maybe a) where
+	Just x == Just y = x == y
+	Nothing == Nothing = True
+	_ == _ = False
+-}
+-- This is basically saying that we want to make all tyes that are Maybe a a part of Eq. This is how Haskell would derive the instance too. 
+
+-- Most of the time, class constraints in class declarations are sued for making a class a subclass of another class, while type constraints
+-- in instance declarations are used for making sure that a certian requirements are met. 
+
+-- When you see that there is a type parameter used in a class declaration, you need to surround it with parenthesis to keep it a part of where
+-- you want it. 
+
+-- If you want to see what instances your typeclass has, type :info TYPECLASS for information.
