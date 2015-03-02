@@ -427,3 +427,35 @@ instance Eq (Maybe a) where
 -- you want it. 
 
 -- If you want to see what instances your typeclass has, type :info TYPECLASS for information.
+
+
+-- A YES-NO TYPECLASS --
+
+-- Let's make a class that will give us True or False based on if a value is considered to be "0" or not. 
+class YesNo a where
+	yesno :: a -> Bool
+-- Now let's define some instances. 
+instance YesNo [a] where
+	yesno [] = False
+	yesno _ = True
+instance YesNo Int where
+	yesno 0 = False
+	yesno _ = True
+instance YesNo Bool where
+	yesno = id -- The 'id' returns the same parameter that it was given. 
+instance YesNo (Maybe a) where
+	yesno (Just _) = True
+	yesno Nothing = False
+instance YesNo (Tree a) where
+	yesno EmptyTree = False
+	yesno _ = True
+instance YesNo TrafficLight where
+	yesno Red = False
+	yesno _ = True
+
+-- Let's make a function that returns something based on what you put in.
+yesnoIf :: (YesNo y) => y -> a -> a -> a
+yesnoIf yesNo yesV noV = if yesno yesNo then yesV else noV
+
+
+-- THE FUNCTOR TYPECLASS --
