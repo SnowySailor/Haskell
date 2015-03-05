@@ -459,3 +459,69 @@ yesnoIf yesNo yesV noV = if yesno yesNo then yesV else noV
 
 
 -- THE FUNCTOR TYPECLASS --
+
+-- The Functor typeclass is for things that can be mapped over, such as lists. Lists are a part of the Functor typeclass. 
+{-
+class Functor f where
+	fmap :: (a -> b) -> f a -> f b
+-}
+-- This is how it's implimented. 
+-- It's just like the map function, which takes a function (a -> b) and a list [a] and returns a list of the second type [b].
+-- fmap is the same as map, but map is only for lists. 
+
+-- Here's an instance of Functor
+{-
+instance Functor [] where
+	fmap = map
+-}
+-- We didn't write [a] or something because the class definition doesn't ask for a concrete type. It's asking for a type constructor. 
+-- The [] is a type constructor, so it can work. But we can't involve 'a', 'b', etc.
+-- Since fmap is the same as map, we get the same results when operating on lists.
+fmapTest :: (a -> b) -> [a] -> [b]
+fmapTest = fmap
+
+mapTest :: (a -> b) -> [a] -> [b]
+mapTest = map
+
+-- The Functor typeclass can work on anything that's like a box. So anything that can holds a value or any number of values. 
+-- Maybe can be put into it as well.
+{-
+instance Functor Maybe where 
+	fmap f (Just x) = Just (f x)
+	fmap f (Nothing) = Nothing
+-}
+-- Once again, we wrote it as a type constructor instead of a type parameter with an 'a' or 'm' or whatever because it takes a type constructor.
+functorTest :: Maybe String
+functorTest = fmap (++ "Hello there") (Just "hi.")
+
+instance Functor Tree where
+	fmap f EmptyTree = EmptyTree
+	fmap f (Node x lTree rTree) = Node (f x) (fmap f lTree) (fmap f rTree)
+-- implementing an instance of the Functor typeclass over Trees. 
+
+{-
+instance Functor (Either a) where
+	fmap f (Right x) = Right (f x)
+	fmap _ (Left x) = Left x
+-}
+-- Here's how the Either type is instanced. Bebause it takes two type parameters, but Functor only wants one, we can give it one so that the
+-- other is left unknown. We only apply the function to the Right value because the Right and Left are usually of two different types. If we 
+-- wanted to apply a function over both L and R, then they would have to be of the same type. 
+{-
+instance (Ord k) => Functor (Map.Map k) where
+	fmap f x = Map.fromList $ map (\(k,v) -> (k, (f v))) $ Map.fromList x
+-}
+
+
+-- KINDS AND SOME TYPE-FU --
+
+class Tofu t where
+	tofu :: j a -> t j a
+data Frank a b = Frank {frankField :: b a} deriving (Show)
+
+data Berry a b c = Berry {yabba :: c, dabba :: b a} deriving (Show)
+
+instance Functor (Berry a b) where
+	fmap f (Berry {yabba = y, dabba = x}) = Berry {yabba = f y, dabba = x}
+	
+-- This will all be talkd about a bit more at a later time. 
