@@ -524,4 +524,4 @@ data Berry a b c = Berry {yabba :: c, dabba :: b a} deriving (Show)
 instance Functor (Berry a b) where
 	fmap f (Berry {yabba = y, dabba = x}) = Berry {yabba = f y, dabba = x}
 	
--- This will all be talkd about a bit more at a later time. 
+-- This will all be talked about a bit more at a later time. 
