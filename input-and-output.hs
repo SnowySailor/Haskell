@@ -113,3 +113,8 @@ main = do
 
 -- Created capslocked.hs
 -- The forever function takes an IO action and returns that IO action over and over again forever. 
+
+-- Created a forM.hs
+-- forM if a function that takes a list of stuff and a function. It then maps the function over the list and sequences it. So it's like mapM but
+-- the parameters are switched. 
+-- The lambda in the file is a function that takes a number and returns an IO action. 
