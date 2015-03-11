@@ -141,3 +141,72 @@ main = do
 
 -- Created lessthan10.hs
 -- This is a program to take in lines but only print them if they are less than 10 characters.
+-- This pattern of getting contents from a file and piping it into a program and then calling a function to intereact with that stuff is so
+-- common that there is actually a function for it. 
+
+-- The interact function has type String -> String as a parameter and returns an IO action that will take some input, run that function on the
+-- input, and then print the function's results. Let's modify the lessthan10.hs to do that. 
+-- There.
+-- We could even write the function like
+{-
+main = interact $ unlines . (filter (<10) . length)) . lines
+-}
+-- There, now it's only one line. 
+-- Interact is mainly used when you're wanting to give a program some input and then get an output from it. 
+
+-- Created palindrome.hs
+-- Let's make a program that continuously reads a line and then tells us if it's a palindrome or not. We could just use getLine and then 
+-- go back to main every time, but we can use interact.
+
+-- Even though we made a program that just transforms one big string input into another, it acts like we did it line by line. This is because 
+-- Haskell is lazy and it wants to do the first line of the first string, but since it can't it waits until it has the first line and then
+-- gives us an output right away. 
+-- We can also run the program by piping a text file into it. 
+-- $ cat words.txt | runhaskell palindromes.hs
+
+-- Nothing is eaten when we type in an input to the lazy IO until it absolutely has to be because what we want to print right then depends on
+-- the input. 
+
+-- Created girlfriend.hs
+-- Now we can learn about reading from and writing to files. 
+-- Our program is several IO actions that are glued together with a do block. 
+-- The first function we encouter is the openFile function, which is new to us. It has a type of FilePath -> IOMode -> IO Handle
+-- FilePath is just a type synonym for String 
+-- IOMode is defined like this
+-- data IOMode = ReadMode | WriteMode | AppendMode | ReadWriteMode
+-- Finally, openFile returns an IO Action that will open the specified file in the specified mode. If we bind that action to something, we get
+-- what is called a handle. A value of type Handle represents where our file is. 
+
+-- In the next line, we see a function called hGetContents, which takes a Handle so it knows where to get the contents from and returns an IO
+-- String 
+-- The function is pretty much like getContents, only getContents reads from the standard input while hGetContents gets from an actual file. 
+-- It works the same as getContents as in if we had a 3GB file, it wouldn't put it into memory and clog us up. Instead, it would read from the
+-- file as needed. 
+
+-- Note the difference between a Handle and the contents. A handle is just something we refer to our file with, while the contents represents 
+-- what is actually in the file. If it were a book, the handle would be your bookmark showing where you are, while the contents is the actual
+-- chapter. 
+
+-- We then print the contents of the file to the screen and then close it with hClose, which takes a handle and returns an IO action that closes
+-- the file
+
+-- Another way of doing what we just did is with withFile. The type of witFile is FilePath -> IOMode -> (Handle -> IO a) -> IO a
+-- It takes the path of a file an, IOMode, and then a function which takes a handle and returns an IO action. What it returns is an IO action
+-- that will open the file, do something with it, and then close it. 
+-- girlfriend2.hs is our previous program written with withFile.
+-- I've also included our own rendition of withFile as an added bonus!
+
+-- Just like we have hGetContents, we also have hGetLine, hGetChar, hPurStrLn, and hPutStr, etc. 
+-- For example, hPutStrLn will take a handle and a string. With this handle, it will write to a file the String that it was given, and then add
+-- a new line after it. In the same vein, hGetLine will take a handle and return an IO action that reads a line from a file. 
+
+-- Loading files and then treating their contents as string is so common, that we have three nice functions to help us out. 
+-- readFile has type FilePath -> IO String. So it will take a file name and read that file lazily and bind its contents to something as a String
+
+-- writeFile has a type of FilePath -> String -> IO (). IF A FILE EXISTS WITH THE NAME, IT WILL BE ERASED BEFORE WRITING HAPPENS
+-- Created girlfriendtocaps.hs
+-- In there is a main that will take the girlfriend.txt and make it into caps. 
+
+-- appendFile has the type of FilePath -> String -> IO ()
+-- appendFile is like writeFile, but it doens't clear the file and make it 0 before adding to it. 
+-- Created appendtodo.hs in order to append to our todo.txt 

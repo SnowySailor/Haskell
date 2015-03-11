@@ -1,6 +1,7 @@
 main = do
-	contents <- getContents
-	putStr (shorterThan contents)
+	interact shorterThan
+	--contents <- getContents
+	--putStr (shorterThan contents)
 
 shorterThan :: String -> String 
 shorterThan cont =
