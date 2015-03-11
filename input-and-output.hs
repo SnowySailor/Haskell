@@ -118,3 +118,26 @@ main = do
 -- forM if a function that takes a list of stuff and a function. It then maps the function over the list and sequences it. So it's like mapM but
 -- the parameters are switched. 
 -- The lambda in the file is a function that takes a number and returns an IO action. 
+-- We can think of forM as "make an IO action for every element in a list." What each IO action is will depend on the element that was used to
+-- make the action. It then preforms those actions and binds the result to something or throws it away. 
+
+
+-- FILES AND STREAMS --
+
+-- Let's meet getContents. This is an IO action that reads everything from the standard input until it encounters an end-of-file character. 
+-- What's cool about getContents is that it does lazy IO. So when you say foo <- getContents it doens't just read it and store it in memory.
+-- It instead says "okay whatever. I'll read the contents later when you actually need to use it."
+
+-- This is useful for when we're piping output form one program into our program. 
+
+-- Created getcontentshaiku.hs
+-- We can run this and give it some input by using 'cat' and a file name then piping it with | into the program. We can also run it normally 
+-- with runhaskell or ./ if we've compiled it.
+
+-- When the result of getContents is bound to a value, it isn't represented in memory as a real string. It's more of a promise that it will 
+-- produce a string eventually. When we map toUpper over 'contents' in our getcontentshaiku.hs, it's also a promise that it will be mapped
+-- over the eventual 'contents'. This is also going on with putStrLn. putStrLn is asking for some capslocked line, and so it tells that to
+-- contents, which tells it to getContents, which then gets stuff from the Terminal. 
+
+-- Created lessthan10.hs
+-- This is a program to take in lines but only print them if they are less than 10 characters.
