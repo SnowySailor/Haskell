@@ -210,3 +210,41 @@ main = interact $ unlines . (filter (<10) . length)) . lines
 -- appendFile has the type of FilePath -> String -> IO ()
 -- appendFile is like writeFile, but it doens't clear the file and make it 0 before adding to it. 
 -- Created appendtodo.hs in order to append to our todo.txt 
+
+-- We can change the size of the buffer ourselves instead of letting the computer decide either 1 line or whatever the OS thinks is cool. 
+-- hSetBuffering takes a Handle and a BufferMode and returns an IO action that sets the buffering. The values of the BufferMode are either
+-- NoBuffering, LineBuffering, and LineBuffering (Maybe Int). The Maybe Int is just how big the chunk should be in bytes. If it is Nothing, the
+-- OS determines the chunk size. NoBuffering sucks because it needs to access the disk one character at a time. 
+
+-- Created bufferingread.hs
+-- This program is the same as the reading program we had before, but this time it's reading in chunks of 2048 bytes. 
+
+-- Reading files in bigger chunks can help us if we want to minimize disk access or if we are reading over a slow network resource. 
+
+-- We can also use hFlush, which is a function that takes a handle and returns an IO action that will flush the buffer of the file associated
+-- with the handle. With line-buffering, the buffer is flushed after every line, and with chunk-buffeirng, it is flushed after every chunk. 
+-- The buffer is also flushed after closing a handle. We can use hFlush to force the reporting of data so far.
+-- We can think of it as a toilet. Your toilet is set to flsh after 1 gallon of water is added to it. When it is flushed, the water (data) in
+-- it is read, and the bowl begins filling again. But you can manually flush it by pressing the lever and forcing the water to be read even 
+-- if it isn't 1 gallon. 
+
+-- Created deletetodo.hs
+-- We've already created a program to add to our list, but what about a program to take away from our list of things to do?
+-- In here, we first get the handle of our file and bind it to 'handle'
+-- Second, we use a function we haven't used before. That function is openTempFile. It takes a directory (in this case ".") and a file name.
+-- It will create a file called 'temp' along with some random characters. It returns an IO action that creates a temporary file and also a
+-- pair of values that is the temporary file name and also the handle. 
+
+-- Next, we bind the contents of todo.txt to 'contents', then split it into a list of strings with 'lines'. Then, we zip the numbers 0.. with the
+-- list item that is a task to do. We then make the list of new strings into one and print it to the terminal before asking the user which item
+-- they would like to remove. 
+
+-- Then, we read in a number and turn it into an Int with 'read'
+-- Once we have done that, we can use delete to remove the n-th value from the lined list of todo.txt. After we remove it, we write that contents
+-- to the temp file that was created earlier. We do that by using hPutStr [HANDLE] [STRING]
+
+-- Once it's written to the temp file, we delete the todo.txt and then rename the temp file to 'todo.txt'
+-- BE CAREFUL THOUGH, SINCE removeFile AND renameFile BOTH TAKE DIRECTORIES. NOT HANDLES. 
+
+
+-- COMMAND LINE ARGUMENTS --
