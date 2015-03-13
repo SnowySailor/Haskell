@@ -248,3 +248,18 @@ main = interact $ unlines . (filter (<10) . length)) . lines
 
 
 -- COMMAND LINE ARGUMENTS --
+
+-- Created todo.hs
+-- We have a file to append to our todo.txt, we ahve one to remove something from it, but all those imply that we only have one todo list and 
+-- that the user has access to calling the specific .hs files and stuff. What we want to do is create a program that can take arguments for 
+-- adding, removing, and view.
+
+-- Created arg-test.hs
+-- First we need to learn about taking arguments.
+-- The System.Environment module has two interesting functions. One of them is getArgs and one is getProgName. getArgs has type IO [String]
+-- getProgName has the type of IO String and just has the program name. 
+-- First, we bind the arguments to args and the program name to progName
+
+-- Now back to todo.hs
+-- We first define the dispatch function, which just returns an association list that has both the argument you can give and a function to go
+-- with it.  
