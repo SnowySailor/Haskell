@@ -338,3 +338,10 @@ randomRs' = take 10 $ randomRs ('a','z') (mkStdGen 10) :: String
 -- Another way to do the above is to use the newStdGen function. This splits our current generator into two new generators. It updates the 
 -- global generator with the new one, and it encapsulates the new generator as a result. 
 -- One we run newStdGen, it updates the global StdGen, so if we called getStdGen again, it would give us a new StdGen!
+
+-- Created guessthenumber.hs
+-- We could do it like we have it, or we could put it all in the main function. I think it's better to have it the way we currently have it 
+-- so that we can have a function that can be use somewhere else at a later time. 
+
+
+-- BYTESTRINGS --
