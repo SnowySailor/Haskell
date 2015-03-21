@@ -144,7 +144,7 @@ map'' f a = foldr (\x acc -> f x : acc) [] a
 -- work with left folds because you can't go to infinity without an unending loop.
 
 -- FOLDL1 --
--- foldl1 works just like foldl except it assumes that the starting value is the first elemen of the list that is provided.
+-- foldl1 works just like foldl except it assumes that the starting value is the first element of the list that is provided.
 -- So much currying.
 sum''' :: (Num a) => [a] -> a
 sum''' = foldl1 ( + )

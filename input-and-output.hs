@@ -1,4 +1,5 @@
 import Control.Monad
+import System.Random
 -- INPUT AND OUTPUT --
 
 -- Protip: To run a program you can either compile it and then run the produced executable file by doing 
@@ -262,4 +263,78 @@ main = interact $ unlines . (filter (<10) . length)) . lines
 
 -- Now back to todo.hs
 -- We first define the dispatch function, which just returns an association list that has both the argument you can give and a function to go
--- with it.  
+-- with it.
+
+
+-- RANDOMNESS --
+
+-- The System.Random module has all the functions we need in otder to generate semingly random data. Because Haskell is a functional language, 
+-- that means that if we give a certain function a parameter twice, it needs to return the same thing every time. This is a problem beucase if
+-- we call a random function twice, it'll have to return the same random data twice. But what we can do is have it take random stuff as a 
+-- parameter. Stuff like the time, the date, the temperature of teh CPU, etc. so that we can generate random data. 
+
+-- The random function has type random :: (RandomGen g, Random a) => g -> (a, g)
+-- RandomGen is a typeclass for types that can act as SOURCES of random, and the Random typeclass is for types that can take on random values.
+-- A Boolean type can take on random values, namely True and False. 
+
+-- To use the random function, we need to get a random generator somehow. The System.Random module exports a type called StdGen, which is an
+-- instance of the RandomGen typeclass. We can make one manually or tell the computer to make one. 
+
+-- mkStdGen function has the type mkStdGen :: Int -> StdGen. It takes an Int and gives us a random generator. 
+giveRandom :: Int -> (Int, StdGen)
+giveRandom a = random $ mkStdGen a :: (Int, StdGen)
+-- We need to tell Haskell which types we want to return because it doesn't know what instance of Random we want to reuturn!
+-- If we call giveRandom on the same number twice, we get the same result each end every time, but if we use a differnet number, we get 
+-- different results. 
+
+-- The reason we get back a new StdGen is so that we can give it to another random function if we want to. 
+-- Let's make a coin toss function.
+coinToss :: StdGen -> (Bool, Bool, Bool)
+coinToss gen = 
+	let
+		(firstCoin, newGen) = random gen
+		(secondCoin, newGen') = random newGen
+		(thirdCoin, _) = random newGen'
+	in
+		(firstCoin, secondCoin, thirdCoin)
+-- The reason we don't need to do (Bool, StdGen) is because Haskell can infer that we want to return Bool from the type declaration.
+
+-- What if we want to return 5 or 6 or 7 coin flips?
+multiCoinToss :: StdGen -> Int -> [Bool]
+multiCoinToss gen num = take num $ randoms gen :: [Bool]
+-- 'randoms' takes a StdGen and returns an infinite list of random values. We use 'take' to take X values from that list. 
+
+-- Implimentation of 'randoms'
+randoms' :: (RandomGen g, Random a) => g -> [a]
+randoms' gen = let (value, newGen) = random gen in value:randoms' newGen
+-- Because it's an infinite list, we can't give a new random generator back.
+
+-- We can make a function to give a number of values and a new generator though. 
+finiteRandoms :: (RandomGen g, Random a, Num n, Eq n) => n -> g -> ([a], g)
+finiteRandoms 0 gen = ([], gen)
+finiteRandoms num gen =
+    let (value, newGen) = random gen
+        (restOfList, finalGen) = finiteRandoms (num-1) newGen
+	in  (value:restOfList, finalGen)
+
+-- How about if we want a value within some sort of range? We can use the randomR function to generate a value within some range. 
+randomR' :: (Random a, RandomGen g) => a -> a -> g -> (a, g)
+randomR' a b gen = randomR (a,b) gen
+
+-- There's also randomRs to produce an infinite stream of stuff.
+randomRs' :: String
+randomRs' = take 10 $ randomRs ('a','z') (mkStdGen 10) :: String
+
+-- System.Random offers the getStdGen function, which returns IO StdGen
+-- Created randomFun.hs
+-- Because it gets a new StdGen each time the program runs, it works out and gives us a different resiults each time. 
+-- Preforming getStdGen twice in the same program will just return the same StdGen, so you need to be mindful of that. 
+
+-- One way to get 2 different strings that are 20 characters long is to take 20 from the stream, and then take 20 more from the same stream.
+-- Created gettwostrings.hs
+-- We use the splitAt function from Data.List to split the stream at 20 two times and then just print out the values. Easy.
+
+-- Created gettwostringsnew.hs
+-- Another way to do the above is to use the newStdGen function. This splits our current generator into two new generators. It updates the 
+-- global generator with the new one, and it encapsulates the new generator as a result. 
+-- One we run newStdGen, it updates the global StdGen, so if we called getStdGen again, it would give us a new StdGen!
