@@ -1,5 +1,8 @@
 import Control.Monad
 import System.Random
+import Data.Word
+import qualified Data.ByteString as S
+import qualified Data.ByteString.Lazy as B
 -- INPUT AND OUTPUT --
 
 -- Protip: To run a program you can either compile it and then run the produced executable file by doing 
@@ -345,3 +348,38 @@ randomRs' = take 10 $ randomRs ('a','z') (mkStdGen 10) :: String
 
 
 -- BYTESTRINGS --
+-- Bytestrings are like lists, but they are only 1 byte (8 bits) long. The way they handle laziness is also different.
+-- The two types of byetstrings are the strict ones and the lazy ones. 
+-- Strict Bytestrings are in Data.Bytestring and there are no promises involved. You can't have an infinite list of strict sytestrings because
+-- once you evaluate the first element in the list, you have to evaluate the whole thing. The upside is that it can be faster, but it's also 
+-- likely to fill up your memory faster due to it evaluating the text all at once. 
+
+-- The other type is in Data.Bytestring.Lazy and it's more lazy. These are lazy, but they aren't as lazy as lists are. Each element is stored in
+-- chunks. Each chunk is 64K, which will fit into a computer's CPU cache.
+
+-- These two modules contain functions that are also found in Data.List, but they use Bystestring instead of [a] and Word8 instead of a. 
+-- Imported Lazy as B and Strict as S. Also Data.Word for Word8
+
+-- The pack function has type pack :: [Word8] -> ByteString. We can think of it as taking a list, which is lazy, and making it less lazy. 
+pack' :: [Word8] -> B.ByteString
+pack' a = B.pack a
+-- The Word8 type is like Int, but it has a much smaller range. That range is anywhere from 0 to 255, and it represents an 8-bit number. It's 
+-- just like Int in that it's also a part of the Num typeclass. 
+
+-- Unpack is the opposite of pack. You give it a bytestring and it returns a list of Word8.
+
+-- fromChunks takes a list of strict ByteStrings and converts it into a lazy ByteStrings. toChunks does the opposite. 
+fromChunks' :: B.ByteString
+fromChunks' = B.fromChunks [S.pack [40..42], S.pack [43..45], S.pack [46..48]]
+-- this is good if you have a lot of strict bytestrings, but you don't want to join them together in memory all at once. 
+
+-- The bytestring version of : is 'cons'. It takes a byte and a bytestring and puts the byte at the beginning of the bytestring. It's lazy, so it
+-- will make a new bytestring even if the one you provide is not full. That's why it's good to use the strict version (con')
+cons'' :: B.ByteString
+cons'' = B.cons' 85 $ B.pack [80..84]
+
+-- empty makes an empty bytestring. 
+
+-- It also has some functions that are the same and behave the same as the ones in System.IO. The only difference between the two is that String
+-- is just replaced with ByteString. 
+-- Created bytestringcopy.hs
