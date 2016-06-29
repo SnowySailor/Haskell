@@ -2,7 +2,7 @@ import System.IO
 import Data.List
 import Data.Char as C
 import System.Directory
-import System.Enviornment
+import System.Environment
 
 dispatch :: [(String, [String] -> IO ())]
 dispatch = [("add", add),
